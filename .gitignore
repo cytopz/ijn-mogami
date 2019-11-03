@@ -2,3 +2,4 @@ venv/
 .vscode/
 .pylintrc
 assets/raw
+__pycache__
