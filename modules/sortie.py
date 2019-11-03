@@ -224,7 +224,7 @@ class Sortie:
             return Dimension(mob_coords[0][0], mob_coords[0][1])
         return Tools.find_closest(mob_coords, (center_point.x, center_point.y))
 
-    def look_around(self, what, mode, sim_min=0.825):
+    def look_around(self, what, mode, sim_min=0.8):
         coord = None
         sim = 0.95
         mid = Dimension(512, 384)
