@@ -12,7 +12,7 @@ class Main:
     def __init__(self):
         self.sortie_module = Sortie()
     def start(self):
-        self.sortie_module.enable_module()
+        self.sortie_module.start()
 
 while True:
     azurpy = Main()
