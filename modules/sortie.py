@@ -181,7 +181,7 @@ class Sortie:
             'small': []
         }
         sim = 0.95
-        sim_min = 0.55
+        sim_min = 0.575
         for key in mob_coords:
             while not mob_coords[key]:
                 if key == 'small':
@@ -224,7 +224,7 @@ class Sortie:
             return Dimension(mob_coords[0][0], mob_coords[0][1])
         return Tools.find_closest(mob_coords, (center_point.x, center_point.y))
 
-    def look_around(self, what, mode, sim_min=0.8):
+    def look_around(self, what, mode, sim_min=0.825):
         coord = None
         sim = 0.95
         mid = Dimension(512, 384)
