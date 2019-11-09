@@ -80,6 +80,8 @@ class Sortie:
             Tools.wait(7)
 
     def kill_boss(self):
+        if Tools.find('urgent'):
+            Tools.tap(self.buttons['confirm'])
         sim = 0.9
         if self.switch_boss:
             self.switch_fleet()
