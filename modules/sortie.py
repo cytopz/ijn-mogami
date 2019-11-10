@@ -54,8 +54,8 @@ class Sortie:
     def clear_mob(self):
         if self.mob_fleet > 1:
             self.switch_fleet()
-        Tools.tap(self.buttons['strategy_panel'])
         while self.kill_count < self.mob_kill_required:
+            Tools.tap(self.buttons['strategy_panel'])
             if Tools.find('urgent'):
                 Tools.tap(self.buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
@@ -80,9 +80,10 @@ class Sortie:
             Tools.wait(7)
 
     def kill_boss(self):
+        sim = 0.9
         if Tools.find('urgent'):
             Tools.tap(self.buttons['confirm'])
-        sim = 0.9
+        Tools.tap(self.buttons['strategy_panel'])
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
