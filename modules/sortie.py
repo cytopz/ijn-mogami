@@ -3,20 +3,20 @@ from utils.tools import Tools, Dimension
 class Sortie:
     def __init__(self):
         self.buttons = {
-            'battle_start': Dimension(910, 585),
-            'auto_battle': Dimension(692, 163),
-            'switch_fleet': Dimension(825, 685),
-            'evade': Dimension(872, 451),
-            'sort': Dimension(357, 483),
-            'tobe_retired_ship': Dimension(100, 109),
-            'back': Dimension(50, 45),
-            'sort_by': Dimension(907, 28),
-            'time_joined': Dimension(657, 141),
-            'disassemble': Dimension(639, 529),
-            'confirm_battle': Dimension(860, 600),
-            'strategy_panel': Dimension(865, 504),
-            'go1': Dimension(759, 487),
-            'go2': Dimension(864, 554),
+            'battle_start': Dimension(1715, 959),
+            'auto_battle': Dimension(1289, 200),
+            'switch_fleet': Dimension(1556, 1030),
+            'evade': Dimension(1614, 730),
+            'sort': Dimension(701, 777),
+            'tobe_retired_ship': Dimension(244, 270),
+            'back': Dimension(108, 103),
+            'sort_by': Dimension(1740, 53),
+            'time_joined': Dimension(1257, 145),
+            'disassemble': Dimension(1213, 874),
+            'confirm_battle': Dimension(1630, 1008),
+            'strategy_panel': Dimension(1617, 593),
+            'go1': Dimension(1430, 784),
+            'go2': Dimension(1627, 915),
             'confirm': Dimension(525, 486)
         }
         self.sortie_map = 'd1'
@@ -151,11 +151,11 @@ class Sortie:
 
     def end_battle_handler(self):
         # Tap to continue
-        Tools.tap(Dimension(785, 621))
-        Tools.tap(Dimension(785, 621))
+        Tools.tap(Dimension(1328, 621))
+        Tools.tap(Dimension(1328, 621))
         # Extra taps incase purple / new ship droped xd
-        Tools.tap(Dimension(785, 621))
-        Tools.tap(Dimension(785, 621))
+        Tools.tap(Dimension(1328, 621))
+        Tools.tap(Dimension(1328, 621))
         Tools.wait(2)
         # Tap confirm
         Tools.tap(self.buttons['confirm_battle'])  #confirm battle
@@ -276,7 +276,7 @@ class Sortie:
     def sort_time_joined(self):
         Tools.tap(self.buttons['sort_by'])
         Tools.tap(self.buttons['time_joined'])
-        Tools.tap(Dimension(639, 606))          # confirm button
+        Tools.tap(Dimension(1197, 1017))          # confirm button
 
     def retire_ship(self):
         Tools.tap(self.buttons['sort'])
@@ -286,14 +286,14 @@ class Sortie:
         # while Tools.find('confirm'):
         #    Tools.tap(Tools.find('confirm'))
 
-        Tools.tap(Dimension(867, 683))       # confirm1
-        Tools.tap(Dimension(808, 598))       # confirm2
-        Tools.tap(Dimension(635, 481))       # confirm2.5 (>=rare botes)
+        Tools.tap(Dimension(1621, 1017))       # confirm1
+        Tools.tap(Dimension(1532, 981))       # confirm2
+        Tools.tap(Dimension(1188, 774))       # confirm2.5 (>=rare botes)
         # Tap to continue
-        Tools.tap(Dimension(785, 621))
-        Tools.tap(Dimension(765, 511))       # confirm3
+        Tools.tap(Dimension(1328, 621))
+        Tools.tap(Dimension(1447, 818))       # confirm3
         Tools.tap(self.buttons['disassemble'])       # disassemble
         # Tap to continue
-        Tools.tap(Dimension(785, 621))
+        Tools.tap(Dimension(1328, 621))
         Tools.tap(self.buttons['back'])
         Tools.wait(3)
