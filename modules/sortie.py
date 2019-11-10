@@ -111,13 +111,10 @@ class Sortie:
             if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if tap_count == 8:
-                mob_coord = self.filter_mob_coords(blacklist=mob_coord)
+                mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
             if tap_count > 15:
-                if not from_boss:
-                    self.mob_coords = self.look_around('mobs', 2)
-                    mob_coord = self.filter_mob_coords()
-                else:
-                    mob_coord = self.look_around('boss', 1)
+                self.mob_coords = self.look_around('mobs', 2)
+                mob_coord = self.filter_mob_coords()
                 tap_count = 0
             Tools.tap(mob_coord)
             tap_count += 1
