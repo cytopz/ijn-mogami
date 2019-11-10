@@ -28,12 +28,12 @@ class Dimension:
             delta = 98-self.x
             self.x += delta + 6
         if self.y > 651:
-            delta = self.y - 651;
-            self.y -= delta + 6;
+            delta = self.y - 651
+            self.y -= delta + 6
         if self.x > 984:
             if self.y < 169 and self.y > 86:
-                delta = 169 - self.y;
-                self.y += delta + 25;
+                delta = 169 - self.y
+                self.y += delta + 25
 
 class Tools:
     SIMILARITY_VALUE = 0.8
