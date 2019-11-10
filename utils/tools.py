@@ -36,7 +36,6 @@ class Dimension:
                 self.y += delta + 25;
 
 class Tools:
-
     SIMILARITY_VALUE = 0.8
 
     @classmethod

@@ -1,9 +1,7 @@
 import subprocess
 
 class Adb:
-
     def __init__(self):
-        self.kill_server()
         self.start_server()
 
     def start_server(self):
