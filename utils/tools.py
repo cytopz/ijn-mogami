@@ -12,7 +12,7 @@ class Dimension:
         self.mob = mob
         if mob:
             print("mob, value increased")
-            self.inc_val(25)
+            self.inc_val(55)
             self.check_borders()
 
     def inc_val(self, val):

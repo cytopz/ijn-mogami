@@ -19,7 +19,7 @@ class Sortie:
             'go2': Dimension(1627, 915),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = 'd1'
+        self.sortie_map = 'd2'
         self.mob_kill_required = 5
         self.kill_count = 0
         self.switch_boss = True
