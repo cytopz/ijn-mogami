@@ -11,6 +11,7 @@ class Adb:
     def kill_server(self):
         command = ['adb', 'kill-server']
         subprocess.call(command)
+
     @classmethod
     def exec_out(self, args):
         command = ['adb', 'exec-out'] + args.split(' ')

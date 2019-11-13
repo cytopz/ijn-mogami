@@ -11,7 +11,6 @@ class Dimension:
         self.y = y
         self.mob = mob
         if mob:
-            print("mob, value increased")
             self.inc_val(25)
             self.check_borders()
 
@@ -48,7 +47,6 @@ class Tools:
     @classmethod
     def find(self, template, similarity=SIMILARITY_VALUE, mob=False):
         screen = self.update_screen()
-        res = None
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         value, location = cv2.minMaxLoc(match)[1], cv2.minMaxLoc(match)[3]
@@ -66,8 +64,7 @@ class Tools:
         fixed_locs = self.fix_locs(list(zip(locations[1], locations[0])))
         if fixed_locs:
             return [Dimension(x, y, mob) for x, y in fixed_locs]
-        else:
-            return None
+        return None
 
     @classmethod
     def tap(self, dimension):
