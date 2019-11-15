@@ -19,7 +19,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = 'd1'
+        self.sortie_map = '8-4'
         self.mob_kill_required = 5
         self.kill_count = 0
         self.switch_boss = True
@@ -56,7 +56,7 @@ class Sortie:
             self.switch_fleet()
         while self.kill_count < self.mob_kill_required:
             Tools.tap(self.buttons['strategy_panel'])
-            if Tools.find('urgent'):
+            if Tools.find('urgent', 0.77):
                 Tools.tap(self.buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
             self.mob_coords = self.find_mobs()
@@ -81,7 +81,7 @@ class Sortie:
 
     def kill_boss(self):
         sim = 0.9
-        if Tools.find('urgent'):
+        if Tools.find('urgent', 0.77):
             Tools.tap(self.buttons['confirm'])
         Tools.tap(self.buttons['strategy_panel'])
         if self.switch_boss:
@@ -107,10 +107,10 @@ class Sortie:
         tap_count = 0
         Tools.tap(mob_coord)
         while not Tools.find('battle_start'):
+            if Tools.find('cant_reach', 0,77):
+                mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
-            if Tools.find('cant_reach'):
-                mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if tap_count == 8:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
             if tap_count > 15:
