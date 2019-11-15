@@ -19,11 +19,11 @@ class Sortie:
             'go2': Dimension(1627, 915),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = 'd1'
-        self.mob_kill_required = 5
+        self.sortie_map = '8-4'
+        self.mob_kill_required = 4
         self.kill_count = 0
         self.switch_boss = True
-        self.mob_fleet = 2
+        self.mob_fleet = 1
         self.current_fleet = 1
         self.needstorefocus = False
         self.mob_coords = {}
@@ -56,6 +56,8 @@ class Sortie:
             self.switch_fleet()
         while self.kill_count < self.mob_kill_required:
             Tools.tap(self.buttons['strategy_panel'])
+            if Tools.find('boss', 0.77):
+                break
             if Tools.find('urgent'):
                 Tools.tap(self.buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
@@ -107,10 +109,11 @@ class Sortie:
         tap_count = 0
         Tools.tap(mob_coord)
         while not Tools.find('battle_start'):
-            if Tools.find('ambush'):
-                self.ambush_handler()
-            if Tools.find('cant_reach'):
+            Tools.tap(mob_coord)
+            if Tools.find('cant_reach', 0.77):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
+            if Tools.find('ambush', 0.77):
+                self.ambush_handler()
             if tap_count == 8:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
             if tap_count > 15:
@@ -163,7 +166,7 @@ class Sortie:
     def get_fleet_coord(self):
         coord = None
         sim = 0.9
-        sim_min = 0.65
+        sim_min = 0.725
         while not coord:
             if sim <= sim_min:
                 break
@@ -181,7 +184,7 @@ class Sortie:
             'small': []
         }
         sim = 0.95
-        sim_min = 0.625
+        sim_min = 0.675
         for key in mob_coords:
             while not mob_coords[key]:
                 if key == 'small':
