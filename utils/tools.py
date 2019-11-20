@@ -14,6 +14,15 @@ class Dimension:
             self.inc_val(25)
             self.check_borders()
 
+    def __eq__ (self, other):
+        coord1 = self.x, self.y
+        coord2 = other.x, other.y
+        print("distance : ", spatial.distance.euclidean(coord1, coord2))
+        return self.__dict__ == other.__dict__ or spatial.distance.euclidean(coord1, coord2) < 2
+
+    def __hash__(self):
+        return hash((self.x, self.y, self.mob))
+
     def inc_val(self, val):
         self.x += val
         self.y += val

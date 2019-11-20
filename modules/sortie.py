@@ -20,15 +20,16 @@ class Sortie:
             'confirm': Dimension(525, 486)
         }
         self.sortie_map = '8-4'
-        self.mob_kill_required = 5
+        self.mob_kill_required = 4
         self.kill_count = 0
         self.switch_boss = True
-        self.mob_fleet = 2
+        self.mob_fleet = 1
         self.current_fleet = 1
         self.needstorefocus = False
         self.mob_coords = {}
         self.boss_coord = None
         self.fleet_coord = None
+        self.finish = False
 
     def start(self):
         self.go_to_map()
@@ -36,7 +37,7 @@ class Sortie:
         self.kill_boss()
 
     def go_to_map(self):
-        if Tools.find('urgent'):
+        if Tools.find('urgent', 0.765):
             Tools.tap(self.buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
         if map_loc:
@@ -56,7 +57,7 @@ class Sortie:
             self.switch_fleet()
         while self.kill_count < self.mob_kill_required:
             Tools.tap(self.buttons['strategy_panel'])
-            if Tools.find('urgent', 0.77):
+            if Tools.find('urgent', 0.765):
                 Tools.tap(self.buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
             self.mob_coords = self.find_mobs()
@@ -81,7 +82,10 @@ class Sortie:
 
     def kill_boss(self):
         sim = 0.9
-        if Tools.find('urgent', 0.77):
+        if self.finish:
+            print("BOSS IS KILLED ABORT ABORT")
+            return
+        if Tools.find('urgent', 0.765):
             Tools.tap(self.buttons['confirm'])
         Tools.tap(self.buttons['strategy_panel'])
         if self.switch_boss:
@@ -91,6 +95,9 @@ class Sortie:
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
         self.watch_for_distraction(self.boss_coord, True)
+        if self.finish:
+            print("BOSS IS KILLED ABORT ABORT")
+            return
         Tools.tap(self.buttons['battle_start'])
         if self.is_deck_full():
             self.retire_ship()
@@ -101,22 +108,26 @@ class Sortie:
             Tools.wait(20)
         self.end_battle_handler()
         self.kill_count += 1
+        self.finish = True
         Tools.wait(7)
 
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
         Tools.tap(mob_coord)
         while not Tools.find('battle_start'):
-            if Tools.find('cant_reach', 0,77):
+            if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
             if tap_count == 8:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
             if tap_count > 15:
-                self.mob_coords = self.look_around('mobs', 2)
+                self.mob_coords = self.look_around('mobs', 2, mob_coord)
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
+            if self.finish:
+                print("BOSS IS KILLED ABORT ABORT")
+                return
             Tools.tap(mob_coord)
             tap_count += 1
 
@@ -125,8 +136,13 @@ class Sortie:
             return self.filter_mob_coords(blacklist=mob_coord)
         if self.switch_boss:
             self.switch_fleet()
-        self.boss_coord = self.look_around('boss', 1)
+        self.boss_coord = Tools.find('boss', 0.9)
+        if not self.boss_coord:
+            self.boss_cord = self.look_around('boss', 1)
         self.mob_coords = self.find_mobs()
+        if not any(self.mob_coords.values()):
+            self.mob_coords = self.look_around('mobs', 2)
+            self.boss_coord = Dimension(512, 360)
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
         self.watch_for_distraction(mob_coord)
         Tools.tap(self.buttons['battle_start'])
@@ -147,7 +163,12 @@ class Sortie:
         Tools.wait(2)
         if self.fail_evade():
             Tools.tap(self.buttons['battle_start'])
-            self.kill_count += 1
+            if self.is_deck_full():
+                self.retire_ship()
+            while not Tools.find('touch_to_continue'):
+                Tools.wait(20)
+            self.end_battle_handler()
+            self.mob_kill_required += 1
 
     def end_battle_handler(self):
         # Tap to continue
@@ -181,7 +202,7 @@ class Sortie:
             'small': []
         }
         sim = 0.95
-        sim_min = 0.575
+        sim_min = 0.6
         for key in mob_coords:
             while not mob_coords[key]:
                 if key == 'small':
@@ -201,16 +222,19 @@ class Sortie:
         center_point = None
         mob_coords = []
         if blacklist:
-            for coords in self.mob_coords.values():
-                print("blacklist : ", coords)
-                if not coords:
+            for key in self.mob_coords:
+                print("blacklist : ", self.mob_coords[key])
+                if not self.mob_coords[key]:
                     continue
-                if blacklist in coords:
-                    coords.remove(blacklist)
+                if blacklist in self.mob_coords[key]:
+                    print("remove blacklist")
+                    self.mob_coords[key].remove(blacklist)
         if boss_coord:
             center_point = boss_coord
         else:
             center_point = self.get_fleet_coord()
+        if not any(self.mob_coords.values()):
+            self.mob_coords = self.look_around('mobs', 2)
         for coords in self.mob_coords.values():
             if not coords:
                 continue
@@ -224,7 +248,7 @@ class Sortie:
             return Dimension(mob_coords[0][0], mob_coords[0][1])
         return Tools.find_closest(mob_coords, (center_point.x, center_point.y))
 
-    def look_around(self, what, mode, sim_min=0.8):
+    def look_around(self, what, mode, sim_min=0.8, blacklist=None):
         coord = None
         sim = 0.95
         mid = Dimension(512, 384)
@@ -248,6 +272,10 @@ class Sortie:
                 sim -= 0.05
             sim = 0.95
             if coord:
+                if type(coord) is dict:
+                    if blacklist:
+                        if blacklist in list(set().union(*coord.values())):
+                            continue
                 return coord
         return None
 
@@ -271,6 +299,7 @@ class Sortie:
         Tools.tap(self.buttons['evade'])
 
     def fail_evade(self):
+        tap_count = 0
         return Tools.find('battle_start')
 
     def sort_time_joined(self):
@@ -296,4 +325,4 @@ class Sortie:
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(self.buttons['back'])
-        Tools.wait(3)
+        Tools.wait(7)
