@@ -17,8 +17,7 @@ class Dimension:
     def __eq__ (self, other):
         coord1 = self.x, self.y
         coord2 = other.x, other.y
-        print("distance : ", spatial.distance.euclidean(coord1, coord2))
-        return self.__dict__ == other.__dict__ or spatial.distance.euclidean(coord1, coord2) < 2
+        return self.__dict__ == other.__dict__ or spatial.distance.euclidean(coord1, coord2) < 5
 
     def __hash__(self):
         return hash((self.x, self.y, self.mob))
@@ -90,7 +89,7 @@ class Tools:
             idx = 0
             fixed_locs = [locs[0]] 
             for loc in locs:
-                if spatial.distance.euclidean(loc, fixed_locs[idx]) > 5 and loc not in fixed_locs:
+                if loc not in fixed_locs:
                     fixed_locs.append(loc)
                     idx += 1
             return fixed_locs

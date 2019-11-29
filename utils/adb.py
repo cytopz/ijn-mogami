@@ -3,20 +3,24 @@ import subprocess
 class Adb:
     def __init__(self):
         self.start_server()
+        if not self.device_available:
+            print("No devices detected.")
+            exit()
 
     def start_server(self):
-        command = ['adb', 'start-server']
-        subprocess.call(command)
+        command = 'adb start-server'
+        subprocess.call(command.split(' '))
 
-    def kill_server(self):
-        command = ['adb', 'kill-server']
-        subprocess.call(command)
+    def device_available(self):
+        commanad = 'adb devices'
+        devices = subprocess.Popen(command.split(' '),
+                stdout=subprocess.PIPE).communicate()[0].decode('utf-8').split('\n')
+        return devices[1]
 
     @classmethod
     def exec_out(self, args):
         command = ['adb', 'exec-out'] + args.split(' ')
-        res = subprocess.Popen(command, stdout=subprocess.PIPE)
-        return res.communicate()[0]
+        return subprocess.Popen(command, stdout=subprocess.PIPE).communicate()[0]
 
     @classmethod
     def shell(self, args):
