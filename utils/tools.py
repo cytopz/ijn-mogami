@@ -12,18 +12,22 @@ class Dimension:
         self.mob = mob
         self.siren = siren
         if mob:
-            self.inc_val(25)
             if siren:
-                self.inc_y(95)
+                self.inc_y(40)
+                self.inc_x(-5)
+            self.inc_val(25)
             self.check_borders()
 
     def __eq__ (self, other):
         coord1 = self.x, self.y
         coord2 = other.x, other.y
-        return self.__dict__ == other.__dict__ or spatial.distance.euclidean(coord1, coord2) < 5
+        return spatial.distance.euclidean(coord1, coord2) < 10
 
     def __hash__(self):
-        return hash((self.x, self.y, self.mob))
+        return hash((self.x, self.y, self.mob, self.siren))
+
+    def __repr(self):
+        return str([self.siren, self.x, self.y])
 
     def inc_x(self, val):
         self.x += val
@@ -81,7 +85,7 @@ class Tools:
         fixed_locs = self.fix_locs(list(zip(locations[1], locations[0])))
         if fixed_locs:
             return [Dimension(x, y, mob, siren) for x, y in fixed_locs]
-        return None
+        return []
 
     @classmethod
     def tap(self, dimension):

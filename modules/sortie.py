@@ -123,6 +123,8 @@ class Sortie:
                 self.ambush_handler()
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
+                if any(self.mob_coords.values()):
+                    tap_count = 0
             if tap_count > 15:
                 self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
                 mob_coord = self.filter_mob_coords()
@@ -193,8 +195,9 @@ class Sortie:
                 break
             coord = Tools.find('fleet', sim)
             sim -= 0.05
-        coord.x += 25
-        coord.y += 390
+        if coord:
+            coord.x += 25
+            coord.y += 490
         return coord
 
     def find_mobs(self):
@@ -206,21 +209,24 @@ class Sortie:
             'small': []
         }
         sim = 0.95
-        sim_min = 0.6
+        sim_min = 0.625
+        coords = []
         for key in mob_coords:
             while sim >= sim_min:
                 if key == 'small':
                     sim_min = 0.85
                 if key == 'medium':
-                    sim_min = 0.725
-                if sim <= sim_min:
-                    break
+                    sim_min = 0.7
                 if key == 'sirens':
-                    sim_min = 0.5
+                    if self.kill_count >= 3:
+                        break
+                    sim_min = 0.575
                     for i in range(1, 5):
-                        coords = Tools.find_multi('siren'+str(i), sim, True, True)
+                        coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
                     coords = Tools.find_multi('mob_'+key, sim, True)
+                if sim <= sim_min:
+                    break
                 if coords:
                     mob_coords[key] += list(filter(lambda x: x not in mob_coords[key], coords))
                 print(key, ':', mob_coords[key])
