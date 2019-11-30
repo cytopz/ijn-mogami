@@ -19,11 +19,11 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '9-2'
-        self.mob_kill_required = 5
+        self.sortie_map = 't6'
+        self.mob_kill_required = 6
         self.kill_count = 0
         self.switch_boss = True
-        self.mob_fleet = 1
+        self.mob_fleet = 2
         self.current_fleet = 1
         self.needstorefocus = False
         self.mob_coords = {}
@@ -200,6 +200,7 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
+            'sirens': [],
             'large': [],
             'medium': [],
             'small': []
@@ -211,10 +212,15 @@ class Sortie:
                 if key == 'small':
                     sim_min = 0.85
                 if key == 'medium':
-                    sim_min = 0.775
+                    sim_min = 0.725
                 if sim <= sim_min:
                     break
-                coords = Tools.find_multi('mob_'+key, sim, True)
+                if key == 'sirens':
+                    sim_min = 0.5
+                    for i in range(1, 5):
+                        coords = Tools.find_multi('siren'+str(i), sim, True, True)
+                else:
+                    coords = Tools.find_multi('mob_'+key, sim, True)
                 if coords:
                     mob_coords[key] += list(filter(lambda x: x not in mob_coords[key], coords))
                 print(key, ':', mob_coords[key])

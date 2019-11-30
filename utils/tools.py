@@ -6,12 +6,15 @@ from scipy import spatial
 from utils.adb import Adb
 
 class Dimension:
-    def __init__(self, x, y, mob=False):
+    def __init__(self, x, y, mob=False, siren=False):
         self.x = x
         self.y = y
         self.mob = mob
+        self.siren = siren
         if mob:
             self.inc_val(25)
+            if siren:
+                self.inc_y(95)
             self.check_borders()
 
     def __eq__ (self, other):
@@ -22,13 +25,19 @@ class Dimension:
     def __hash__(self):
         return hash((self.x, self.y, self.mob))
 
-    def inc_val(self, val):
+    def inc_x(self, val):
         self.x += val
+
+    def inc_y(self, val):
         self.y += val
 
+    def inc_val(self, val):
+        self.inc_x(val)
+        self.inc_y(val)
+
     def dec_val(self, val):
-        self.x -= val
-        self.y -= val
+        self.inc_x(-val)
+        self.inc_y(-val)
 
     def check_borders(self):
         if self.x < 98:
@@ -64,14 +73,14 @@ class Tools:
         return None
 
     @classmethod
-    def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False):
+    def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False, siren=False):
         screen = self.update_screen()
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         locations = np.where(match >= similarity)
         fixed_locs = self.fix_locs(list(zip(locations[1], locations[0])))
         if fixed_locs:
-            return [Dimension(x, y, mob) for x, y in fixed_locs]
+            return [Dimension(x, y, mob, siren) for x, y in fixed_locs]
         return None
 
     @classmethod
