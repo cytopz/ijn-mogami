@@ -81,10 +81,10 @@ class Tools:
         screen = self.update_screen()
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
-        locations = np.where(match >= 0.5)
-        print(list(zip(locations))[0][0], list(zip(locations))[0][1])
-        if zip(*locations):
-            fixed_locs = self.fix_locs([Dimension(x, y, mob, siren) for x, y in locations])
+        locations = np.where(match >= similarity)
+        locations = list(zip(locations[1], locations[0]))
+        fixed_locs = self.fix_locs([Dimension(x, y, mob, siren) for x, y in locations])
+        if fixed_locs:
             return fixed_locs
         return []
 
