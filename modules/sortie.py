@@ -220,7 +220,7 @@ class Sortie:
                 if key == 'sirens':
                     if self.kill_count >= 3:
                         break
-                    sim_min = 0.55
+                    sim_min = 0.6
                     for i in range(1, 5):
                         coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
@@ -228,7 +228,7 @@ class Sortie:
                 if sim <= sim_min:
                     break
                 if coords:
-                    mob_coords[key] += list(filter(lambda x: x not in mob_coords[key], coords))
+                    mob_coords[key] += list(filter(lambda x, k=key: x not in mob_coords[k], coords))
                 print(key, ':', mob_coords[key])
                 sim -= 0.025
             sim = 0.95
@@ -258,7 +258,7 @@ class Sortie:
             for coord in coords:
                 x, y = coord.x, coord.y
                 mob_coords.append((x, y))
-                print(x, y)
+                print(coord)
             if mob_coords:
                 break
         if len(mob_coords) == 1:

@@ -26,8 +26,8 @@ class Dimension:
     def __hash__(self):
         return hash((self.x, self.y, self.mob, self.siren))
 
-    def __repr(self):
-        return str([self.siren, self.x, self.y])
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
 
     def inc_x(self, val):
         self.x += val
