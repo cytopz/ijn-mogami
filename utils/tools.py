@@ -81,10 +81,11 @@ class Tools:
         screen = self.update_screen()
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
-        locations = np.where(match >= similarity)
-        fixed_locs = self.fix_locs(list(zip(locations[1], locations[0])))
-        if fixed_locs:
-            return [Dimension(x, y, mob, siren) for x, y in fixed_locs]
+        locations = np.where(match >= 0.5)
+        print(list(zip(locations))[0][0], list(zip(locations))[0][1])
+        if zip(*locations):
+            fixed_locs = self.fix_locs([Dimension(x, y, mob, siren) for x, y in locations])
+            return fixed_locs
         return []
 
     @classmethod
@@ -99,15 +100,13 @@ class Tools:
     @classmethod
     def fix_locs(self, locs):
         try:
-            idx = 0
             fixed_locs = [locs[0]] 
             for loc in locs:
                 if loc not in fixed_locs:
                     fixed_locs.append(loc)
-                    idx += 1
             return fixed_locs
         except IndexError:
-            return None
+            return []
 
     @classmethod
     def find_closest(self, coords, coord):
