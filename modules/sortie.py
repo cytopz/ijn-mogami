@@ -195,9 +195,10 @@ class Sortie:
                 break
             coord = Tools.find('fleet', sim)
             sim -= 0.05
-        if coord:
-            coord.x += 25
-            coord.y += 490
+        if not coord:
+            return Dimension(512, 360)
+        coord.x += 25
+        coord.y += 440
         return coord
 
     def find_mobs(self):
