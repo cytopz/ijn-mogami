@@ -219,6 +219,8 @@ class Sortie:
                 if key == 'medium':
                     sim_min = 0.7
                 if key == 'sirens':
+                    if len(mob_coords['sirens']) != 0:
+                        break
                     if self.kill_count >= 3:
                         break
                     sim_min = 0.6
