@@ -19,10 +19,10 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '8-3'
-        self.mob_kill_required = 5
+        self.sortie_map = '11-4'
+        self.mob_kill_required = 6
         self.kill_count = 0
-        self.switch_boss = False
+        self.switch_boss = True
         self.mob_fleet = 1
         self.current_fleet = 1
         self.needstorefocus = False
