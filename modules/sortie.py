@@ -19,7 +19,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '11-4'
+        self.sortie_map = '10-3'
         self.mob_kill_required = 6
         self.kill_count = 0
         self.switch_boss = True
@@ -63,8 +63,6 @@ class Sortie:
                 Tools.tap(self.buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
             self.mob_coords = self.find_mobs()
-            if not self.fleet_coord:
-                self.refocus_fleet()
             if not self.mob_coords:
                 self.refocus_fleet()
                 self.mob_coords = self.look_around('mobs', 2)
@@ -193,9 +191,11 @@ class Sortie:
                 break
             coord = Tools.find('fleet', sim)
             sim -= 0.05
-        if coord:
-            coord.x += 25
-            coord.y += 390
+        if not coord:
+            coord.x = 400
+            coord.y = 290
+        coord.x += 25
+        coord.y += 250
         return coord
 
     def find_mobs(self):
