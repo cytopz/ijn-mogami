@@ -116,11 +116,14 @@ class Sortie:
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
         Tools.tap(mob_coord)
-        while not Tools.find('battle_start'):
+        while Tools.find('attack'):
             if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
+            if Tools.find('sort'):
+                self.retire_ship()
+                Tools.tap(self.buttons['attack'])
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
                 if any(self.mob_coords.values()):
