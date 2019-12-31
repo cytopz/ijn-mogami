@@ -123,7 +123,7 @@ class Sortie:
                 self.ambush_handler()
             if Tools.find('sort'):
                 self.retire_ship()
-                Tools.tap(self.buttons['attack'])
+                Tools.tap(mob_coord)
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
                 if any(self.mob_coords.values()):
