@@ -47,8 +47,8 @@ class Dimension:
         if self.x < 98:
             delta = 98-self.x
             self.x += delta + 6
-        if self.y > 651:
-            delta = self.y - 651
+        if self.y > 640:
+            delta = self.y - 640
             self.y -= delta + 6
         if self.x > 984:
             if self.y < 169 and self.y > 86:
@@ -57,6 +57,8 @@ class Dimension:
 
 class Tools:
     SIMILARITY_VALUE = 0.8
+    CURRENT_SCREEN = np.array([[]])
+    UPDATED = False
 
     @classmethod
     def update_screen(self, bgr=0): 
@@ -78,7 +80,10 @@ class Tools:
 
     @classmethod
     def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False, siren=False):
-        screen = self.update_screen()
+        if (mob or siren) and not self.CURRENT_SCREEN.any():
+            print('from mob')
+            self.CURRENT_SCREEN = self.update_screen()
+        screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         locations = np.where(match >= similarity)
@@ -121,3 +126,7 @@ class Tools:
     @classmethod
     def wait(self, duration):
         time.sleep(duration)
+
+    @classmethod
+    def delete_screen(self):
+        self.CURRENT_SCREEN = np.array([[]])
