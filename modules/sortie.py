@@ -19,7 +19,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = 't6'
+        self.sortie_map = 'd3'
         self.mob_kill_required = 6
         self.kill_count = 0
         self.switch_boss = True
@@ -55,8 +55,9 @@ class Sortie:
     def clear_mob(self):
         if self.mob_fleet > 1:
             self.switch_fleet()
+        Tools.swipe(Dimension(512, 384), Dimension(12, 384))
         while self.kill_count < self.mob_kill_required:
-            Tools.tap(self.buttons['strategy_panel'])
+            #Tools.tap(self.buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
                 return
             if Tools.find('urgent', 0.765):
@@ -77,7 +78,7 @@ class Sortie:
             if not self.is_auto_enabled:
                 self.enable_auto()
             while not Tools.find('touch_to_continue'):
-                Tools.wait(20)
+                Tools.wait(5)
             self.end_battle_handler()
             self.kill_count += 1
             Tools.wait(7)
@@ -220,13 +221,13 @@ class Sortie:
                 if key == 'small':
                     sim_min = 0.85
                 if key == 'medium':
-                    sim_min = 0.7
+                    sim_min = 0.75
                 if key == 'sirens':
                     if len(mob_coords['sirens']) != 0:
                         break
                     if self.kill_count >= 3:
                         break
-                    sim_min = 0.6
+                    sim_min = 0.575
                     for i in range(1, 5):
                         coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
@@ -239,6 +240,7 @@ class Sortie:
                 sim -= 0.025
             sim = 0.95
             sim_min = 0.6
+        Tools.delete_screen()
         return mob_coords
 
     def filter_mob_coords(self, blacklist=None, boss_coord=None):
