@@ -153,9 +153,6 @@ class Sortie:
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
         self.watch_for_distraction(mob_coord)
         Tools.tap(self.buttons['battle_start'])
-        if self.is_deck_full():
-            self.retire_ship()
-            Tools.tap(self.buttons['battle_start'])
         if not self.is_auto_enabled():
             self.enable_auto()
         while not Tools.find('touch_to_continue'):
