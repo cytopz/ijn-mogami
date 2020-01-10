@@ -8,12 +8,10 @@ class Adb:
             exit()
 
     def start_server(self):
-        command = 'adb start-server'
-        subprocess.call(command.split(' '))
+        subprocess.call('adb start-server'.split(' '))
 
     def device_available(self):
-        command = 'adb devices'
-        devices = subprocess.Popen(command.split(' '),
+        devices = subprocess.Popen('adb devices'.split(' '),
                 stdout=subprocess.PIPE).communicate()[0].decode('utf-8').split('\n')
         return devices[1]
 
