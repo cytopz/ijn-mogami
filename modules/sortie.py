@@ -204,7 +204,6 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
-            'sirens': [],
             'large': [],
             'medium': [],
             'small': []
@@ -218,16 +217,7 @@ class Sortie:
                     sim_min = 0.85
                 if key == 'medium':
                     sim_min = 0.75
-                if key == 'sirens':
-                    if len(mob_coords['sirens']) != 0:
-                        break
-                    if self.kill_count >= 3:
-                        break
-                    sim_min = 0.575
-                    for i in range(1, 5):
-                        coords += Tools.find_multi('siren'+str(i), sim, True, True)
-                else:
-                    coords = Tools.find_multi('mob_'+key, sim, True)
+                coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
                     break
                 if coords:
