@@ -19,11 +19,11 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '10-3'
+        self.sortie_map = 'd3'
         self.mob_kill_required = 6
         self.kill_count = 0
         self.switch_boss = True
-        self.mob_fleet = 1
+        self.mob_fleet = 2
         self.current_fleet = 1
         self.needstorefocus = False
         self.mob_coords = {}
@@ -55,8 +55,9 @@ class Sortie:
     def clear_mob(self):
         if self.mob_fleet > 1:
             self.switch_fleet()
+        Tools.swipe(Dimension(512, 384), Dimension(12, 384))
         while self.kill_count < self.mob_kill_required:
-            Tools.tap(self.buttons['strategy_panel'])
+            #Tools.tap(self.buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
                 return
             if Tools.find('urgent', 0.765):
@@ -75,7 +76,7 @@ class Sortie:
             if not self.is_auto_enabled:
                 self.enable_auto()
             while not Tools.find('touch_to_continue'):
-                Tools.wait(20)
+                Tools.wait(5)
             self.end_battle_handler()
             self.kill_count += 1
             Tools.wait(7)
@@ -114,13 +115,18 @@ class Sortie:
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
         Tools.tap(mob_coord)
-        while not Tools.find('battle_start'):
+        while Tools.find('attack'):
             if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
+            if Tools.find('sort'):
+                self.retire_ship()
+                Tools.tap(mob_coord)
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
+                if any(self.mob_coords.values()):
+                    tap_count = 0
             if tap_count > 15:
                 self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
                 mob_coord = self.filter_mob_coords()
@@ -192,36 +198,47 @@ class Sortie:
             coord = Tools.find('fleet', sim)
             sim -= 0.05
         if not coord:
-            coord.x = 400
-            coord.y = 290
+            return Dimension(512, 360)
         coord.x += 25
-        coord.y += 250
+        coord.y += 440
         return coord
 
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
+            'sirens': [],
             'large': [],
             'medium': [],
             'small': []
         }
         sim = 0.95
-        sim_min = 0.6
+        sim_min = 0.625
+        coords = []
         for key in mob_coords:
             while sim >= sim_min:
                 if key == 'small':
                     sim_min = 0.85
                 if key == 'medium':
-                    sim_min = 0.775
+                    sim_min = 0.75
+                if key == 'sirens':
+                    if len(mob_coords['sirens']) != 0:
+                        break
+                    if self.kill_count >= 3:
+                        break
+                    sim_min = 0.575
+                    for i in range(1, 5):
+                        coords += Tools.find_multi('siren'+str(i), sim, True, True)
+                else:
+                    coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
                     break
-                coords = Tools.find_multi('mob_'+key, sim, True)
                 if coords:
-                    mob_coords[key] += list(filter(lambda x: x not in mob_coords[key], coords))
+                    mob_coords[key] += list(filter(lambda x, k=key: x not in mob_coords[k], coords))
                 print(key, ':', mob_coords[key])
                 sim -= 0.025
             sim = 0.95
             sim_min = 0.6
+        Tools.delete_screen()
         return mob_coords
 
     def filter_mob_coords(self, blacklist=None, boss_coord=None):
@@ -247,7 +264,7 @@ class Sortie:
             for coord in coords:
                 x, y = coord.x, coord.y
                 mob_coords.append((x, y))
-                print(x, y)
+                print(coord)
             if mob_coords:
                 break
         if len(mob_coords) == 1:

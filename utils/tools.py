@@ -6,39 +6,49 @@ from scipy import spatial
 from utils.adb import Adb
 
 class Dimension:
-    def __init__(self, x, y, mob=False):
+    def __init__(self, x, y, mob=False, siren=False):
         self.x = x
         self.y = y
         self.mob = mob
+        self.siren = siren
         if mob:
+            if siren:
+                self.inc_y(40)
+                self.inc_x(-5)
             self.inc_val(25)
             self.check_borders()
 
     def __eq__ (self, other):
         coord1 = self.x, self.y
         coord2 = other.x, other.y
-        return self.__dict__ == other.__dict__ or spatial.distance.euclidean(coord1, coord2) < 5
+        return spatial.distance.euclidean(coord1, coord2) < 10
 
     def __hash__(self):
-        return hash((self.x, self.y, self.mob))
+        return hash((self.x, self.y, self.mob, self.siren))
 
     def __repr__(self):
         return f"({self.x}, {self.y})"
 
-    def inc_val(self, val):
+    def inc_x(self, val):
         self.x += val
+
+    def inc_y(self, val):
         self.y += val
 
+    def inc_val(self, val):
+        self.inc_x(val)
+        self.inc_y(val)
+
     def dec_val(self, val):
-        self.x -= val
-        self.y -= val
+        self.inc_x(-val)
+        self.inc_y(-val)
 
     def check_borders(self):
         if self.x < 98:
             delta = 98-self.x
             self.x += delta + 6
-        if self.y > 651:
-            delta = self.y - 651
+        if self.y > 640:
+            delta = self.y - 640
             self.y -= delta + 6
         if self.x > 984:
             if self.y < 169 and self.y > 86:
@@ -47,6 +57,8 @@ class Dimension:
 
 class Tools:
     SIMILARITY_VALUE = 0.8
+    CURRENT_SCREEN = np.array([[]])
+    UPDATED = False
 
     @classmethod
     def update_screen(self, bgr=0): 
@@ -67,12 +79,16 @@ class Tools:
         return None
 
     @classmethod
-    def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False):
-        screen = self.update_screen()
+    def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False, siren=False):
+        if (mob or siren) and not self.CURRENT_SCREEN.any():
+            print('from mob')
+            self.CURRENT_SCREEN = self.update_screen()
+        screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
         img_template = cv2.imread('assets/{}.png'.format(template), 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         locations = np.where(match >= similarity)
-        fixed_locs = self.fix_locs([Dimension(x, y, mob) for x, y in list(zip(locations[1], locations[0]))])
+        locations = list(zip(locations[1], locations[0]))
+        fixed_locs = self.fix_locs([Dimension(x, y, mob, siren) for x, y in locations])
         if fixed_locs:
             return fixed_locs
         return []
@@ -95,7 +111,7 @@ class Tools:
                     fixed_locs.append(loc)
             return fixed_locs
         except IndexError:
-            return None
+            return []
 
     @classmethod
     def find_closest(self, coords, coord):
@@ -110,3 +126,7 @@ class Tools:
     @classmethod
     def wait(self, duration):
         time.sleep(duration)
+
+    @classmethod
+    def delete_screen(self):
+        self.CURRENT_SCREEN = np.array([[]])
