@@ -12,7 +12,7 @@ class Adb:
         subprocess.call(command.split(' '))
 
     def device_available(self):
-        commanad = 'adb devices'
+        command = 'adb devices'
         devices = subprocess.Popen(command.split(' '),
                 stdout=subprocess.PIPE).communicate()[0].decode('utf-8').split('\n')
         return devices[1]
