@@ -10,8 +10,9 @@ class Adb:
     def start_server(self):
         try:
             subprocess.call('adb start-server'.split(' '))
-        except:
+        except Exception as e:
             print('adb was not found. exiting...')
+            print(e)
             exit()
 
     def device_available(self):
