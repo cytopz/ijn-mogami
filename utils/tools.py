@@ -70,7 +70,7 @@ class Tools:
     @classmethod
     def find(self, template, similarity=SIMILARITY_VALUE, mob=False):
         screen = self.update_screen()
-        img_template = cv2.imread('assets/{}.png'.format(template), 0)
+        img_template = cv2.imread(f'assets/{template}.png', 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         value, location = cv2.minMaxLoc(match)[1], cv2.minMaxLoc(match)[3]
         if value >= similarity:
@@ -84,7 +84,7 @@ class Tools:
             print('from mob')
             self.CURRENT_SCREEN = self.update_screen()
         screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
-        img_template = cv2.imread('assets/{}.png'.format(template), 0)
+        img_template = cv2.imread(f'assets/{template}.png', 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         locations = np.where(match >= similarity)
         locations = list(zip(locations[1], locations[0]))
@@ -95,12 +95,12 @@ class Tools:
 
     @classmethod
     def tap(self, dimension):
-        Adb.shell('input tap {} {}'.format(dimension.x, dimension.y))
+        Adb.shell(f'input tap {dimension.x} {dimension.y}')
         time.sleep(1.5)
 
     @classmethod
     def swipe(self, dimension1, dimension2):
-        Adb.shell('input swipe {} {} {} {} 250'.format(dimension1.x, dimension1.y, dimension2.x, dimension2.y))
+        Adb.shell(f'input swipe {dimension1.x} {dimension1.y} {dimension2.x} {dimension2.y} 250')
 
     @classmethod
     def fix_locs(self, locs):
