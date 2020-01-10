@@ -14,7 +14,8 @@ class Main:
     def start(self):
         self.sortie_module.start()
 
-while True:
-    azurpy = Main()
-    azurpy.start()
-    print("done")
+if __name__ == '__main__':
+    while True:
+        azurpy = Main()
+        azurpy.start()
+        print("done")
