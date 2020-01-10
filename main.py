@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-## 
-#  Emulator Settings
-#  Resolution : 1024x720 240 HDPI
-#  Android Version : 6.0
-##
+ ####################################
+#   Emulator Settings                #
+#   Resolution : 1024x720 240 HDPI   #
+#   Android Version : 6.0            #
+ ####################################
 
 from modules.sortie import Sortie
 
