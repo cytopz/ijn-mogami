@@ -55,7 +55,8 @@ class Sortie:
     def clear_mob(self):
         if self.mob_fleet > 1:
             self.switch_fleet()
-        Tools.swipe(Dimension(512, 384), Dimension(12, 384))
+        # to center the view, adjust the values manually
+        # Tools.swipe(Dimension(512, 384), Dimension(12, 384))
         while self.kill_count < self.mob_kill_required:
             #Tools.tap(self.buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
