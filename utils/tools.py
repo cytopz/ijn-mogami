@@ -61,7 +61,7 @@ class Tools:
     UPDATED = False
 
     @classmethod
-    def update_screen(self, bgr=0): 
+    def update_screen(self, bgr=0):
         img = None
         while img is None:
             img = cv2.imdecode(np.fromstring(Adb.exec_out('screencap -p'), dtype=np.uint8), bgr)
@@ -105,7 +105,7 @@ class Tools:
     @classmethod
     def fix_locs(self, locs):
         try:
-            fixed_locs = [locs[0]] 
+            fixed_locs = [locs[0]]
             for loc in locs:
                 if loc not in fixed_locs:
                     fixed_locs.append(loc)
