@@ -204,8 +204,8 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
-            'large': [],
             'medium': [],
+            'large': [],
             'small': []
         }
         sim = 0.95
