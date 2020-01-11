@@ -283,7 +283,7 @@ class Sortie:
                 sim -= 0.05
             sim = 0.95
             if coord:
-                if type(coord) is dict:
+                if isinstance(coord, dict):
                     if blacklist:
                         if blacklist in list(set().union(*coord.values())):
                             continue
