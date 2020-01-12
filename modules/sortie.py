@@ -99,12 +99,12 @@ class Sortie:
                 self.mob_coords = self.look_around('mobs', 2)
             mob_coord = self.filter_mob_coords()
             self.watch_for_distraction(mob_coord)
+            if not self.is_auto_enabled:
+                self.enable_auto()
             Tools.tap(self.buttons['battle_start'])
             if self.is_deck_full():
                 self.retire_ship()
                 Tools.tap(self.buttons['battle_start'])
-            if not self.is_auto_enabled:
-                self.enable_auto()
             while not Tools.find('touch_to_continue'):
                 Tools.wait(5)
             self.end_battle_handler()
@@ -130,11 +130,11 @@ class Sortie:
             print("BOSS IS KILLED ABORT ABORT")
             return
         Tools.tap(self.buttons['battle_start'])
+        if not self.is_auto_enabled():
+            self.enable_auto()
         if self.is_deck_full():
             self.retire_ship()
             Tools.tap(self.buttons['battle_start'])
-        if not self.is_auto_enabled():
-            self.enable_auto()
         while not Tools.find('touch_to_continue'):
             Tools.wait(20)
         self.end_battle_handler()
@@ -181,9 +181,9 @@ class Sortie:
             self.boss_coord = Dimension(512, 360)
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
         self.watch_for_distraction(mob_coord)
-        Tools.tap(self.buttons['battle_start'])
         if not self.is_auto_enabled():
             self.enable_auto()
+        Tools.tap(self.buttons['battle_start'])
         while not Tools.find('touch_to_continue'):
             Tools.wait(20)
         self.end_battle_handler()
