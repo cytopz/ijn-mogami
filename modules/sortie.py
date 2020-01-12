@@ -208,9 +208,11 @@ class Sortie:
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(Dimension(785, 621))
-        # Extra taps incase purple / new ship droped xd
-        Tools.tap(Dimension(785, 621))
-        Tools.tap(Dimension(785, 621))
+        # TODO: implement >SR botes
+        if Tools.find('rare'):
+            print('new BLUE bote dropped. locking...')
+            Tools.tap(Dimension(785, 621))
+            Tools.tap(self.buttons['confirm'])
         Tools.wait(2)
         # Tap confirm
         Tools.tap(self.buttons['confirm_battle'])  #confirm battle
