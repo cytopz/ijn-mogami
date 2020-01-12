@@ -1,4 +1,4 @@
-from utils.tools import Tools, Dimension
+from utils.tools import Tools, Dimension, MapDetail
 
 class Sortie:
     def __init__(self):
@@ -43,26 +43,26 @@ class Sortie:
     def go_to_chapter(self):
         if not self.enable_chapter_navigation:
             return
-        target_chapter = int(self.sortie_map.split("-")[0])
+        target_chapter = int(self.sortie_map.split('-')[0])
         current_chapter = 0
-        print("getting current chapter...")
+        print('getting current chapter...')
         for chapter in range(1, 13):
-            if Tools.find("{}-1".format(chapter)):
+            if Tools.find(f'{chapter}-1'):
                 current_chapter = chapter
                 break
-        print("current chapter found : ", current_chapter)
-        print("target chapter : ", target_chapter)
+        print('current chapter found : ', current_chapter)
+        print('target chapter : ', target_chapter)
         if current_chapter != 0:
             difference = target_chapter - current_chapter
-            print("chapter difference", difference)
+            print('chapter difference', difference)
             for _ in range(0, abs(difference)):
                 if difference >= 1:
-                    print("selecting next chapter")
+                    print('selecting next chapter')
                     Tools.tap(self.buttons['chapter_next'])
                 else:
-                    print("selecting previous chapter")
+                    print('selecting previous chapter')
                     Tools.tap(self.buttons['chapter_prev'])
-            print("reached target chapter ", target_chapter)
+            print('reached target chapter ', target_chapter)
 
     def go_to_map(self):
         if Tools.find('urgent', 0.725):
@@ -365,74 +365,3 @@ class Sortie:
         Tools.tap(Dimension(785, 621))
         Tools.tap(self.buttons['back'])
         Tools.wait(7)
-
-class MapDetail:
-    def __init__(self, sortie_map):
-        self.battle_requirement = {
-            # Chapter 1
-            '1-1': 1,
-            '1-2': 2,
-            '1-3': 2,
-            '1-4': 3,
-            # Chapter 2
-            '2-1': 2,
-            '2-2': 3,
-            '2-3': 3,
-            '2-4': 3,
-            # Chapter 3
-            '3-1': 3,
-            '3-2': 3,
-            '3-3': 3,
-            '3-4': 3,
-            # Chapter 4
-            '4-1': 3,
-            '4-2': 3,
-            '4-3': 3,
-            '4-4': 4,
-            # Chapter 5
-            '5-1': 4,
-            '5-2': 4,
-            '5-3': 4,
-            '5-4': 4,
-            # Chapter 6
-            '6-1': 4,
-            '6-2': 4,
-            '6-3': 4,
-            '6-4': 5,
-            # Chapter 7
-            '7-1': 5,
-            '7-2': 5,
-            '7-3': 5,
-            '7-4': 5,
-            # Chapter 8
-            '8-1': 4,
-            '8-2': 4,
-            '8-3': 4,
-            '8-4': 5,
-            # Chapter 9
-            '9-1': 5,
-            '9-2': 5,
-            '9-3': 5,
-            '9-4': 5,
-            # Chapter 10
-            '10-1': 6,
-            '10-2': 6,
-            '10-3': 6,
-            '10-4': 6,
-            # Chapter 11
-            '11-1': 6,
-            '11-2': 6,
-            '11-3': 6,
-            '11-4': 6,
-            # Chapter 12
-            '12-1': 6,
-            '12-2': 6,
-            '12-3': 6,
-            '12-4': 6,
-            # Chapter 13
-            '13-1': 6,
-            '13-2': 6,
-            '13-3': 6,
-            '13-4': 7
-        }
-        self.kill_requirement = self.battle_requirement[sortie_map]
