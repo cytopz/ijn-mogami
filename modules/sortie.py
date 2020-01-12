@@ -15,11 +15,14 @@ class Sortie:
             'disassemble': Dimension(639, 529),
             'confirm_battle': Dimension(860, 600),
             'strategy_panel': Dimension(865, 504),
+            'chapter_prev' : Dimension(43, 497),
+            'chapter_next' : Dimension(984, 425),
             'go1': Dimension(759, 487),
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
         self.sortie_map = '4-2'
+        self.enable_chapter_navigation = False
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -32,9 +35,34 @@ class Sortie:
         self.finish = False
 
     def start(self):
+        self.go_to_chapter()
         self.go_to_map()
         self.clear_mob()
         self.kill_boss()
+
+    def go_to_chapter(self):
+        if not self.enable_chapter_navigation:
+            return
+        target_chapter = int(self.sortie_map.split("-")[0])
+        current_chapter = 0
+        print("getting current chapter...")
+        for chapter in range(1, 13):
+            if Tools.find("{}-1".format(chapter)):
+                current_chapter = chapter
+                break
+        print("current chapter found : ", current_chapter)
+        print("target chapter : ", target_chapter)
+        if current_chapter != 0:
+            difference = target_chapter - current_chapter
+            print("chapter difference", difference)
+            for _ in range(0, abs(difference)):
+                if difference >= 1:
+                    print("selecting next chapter")
+                    Tools.tap(self.buttons['chapter_next'])
+                else:
+                    print("selecting previous chapter")
+                    Tools.tap(self.buttons['chapter_prev'])
+            print("reached target chapter ", target_chapter)
 
     def go_to_map(self):
         if Tools.find('urgent', 0.725):
