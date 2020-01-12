@@ -21,7 +21,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '4-2'
+        self.sortie_map = '12-1'
         self.enable_chapter_navigation = False
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
@@ -234,8 +234,8 @@ class Sortie:
         self.mob_coords.clear()
         mob_coords = {
             'medium': [],
-            'large': [],
-            'small': []
+            'small': [],
+            'large': []
         }
         sim = 0.95
         sim_min = 0.625
@@ -251,7 +251,7 @@ class Sortie:
                     break
                 if coords:
                     mob_coords[key] += list(filter(lambda x, k=key: x not in mob_coords[k], coords))
-                print(key, ':', mob_coords[key])
+                print(f'{key} : {mob_coords[key]}')
                 sim -= 0.025
             sim = 0.95
             sim_min = 0.6
