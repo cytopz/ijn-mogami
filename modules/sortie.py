@@ -213,6 +213,9 @@ class Sortie:
             print('new BLUE bote dropped. locking...')
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm'])
+        else:
+            Tools.tap(Dimension(785, 621))
+            Tools.tap(Dimension(785, 621))
         Tools.wait(2)
         # Tap confirm
         Tools.tap(self.buttons['confirm_battle'])  #confirm battle
