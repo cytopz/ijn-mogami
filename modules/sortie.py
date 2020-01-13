@@ -21,7 +21,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '12-1'
+        self.sortie_map = '6-1'
         self.enable_chapter_navigation = False
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
@@ -145,7 +145,7 @@ class Sortie:
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
         Tools.tap(mob_coord)
-        while Tools.find('attack'):
+        while True:
             if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
@@ -162,7 +162,10 @@ class Sortie:
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
             if self.finish:
-                print("BOSS IS KILLED ABORT ABORT")
+                print('BOSS IS KILLED ABORT ABORT')
+                return
+            if Tools.find('battle_start'):
+                print('Starting battle')
                 return
             Tools.tap(mob_coord)
             tap_count += 1
