@@ -7,12 +7,11 @@
 ######################################
 
 import sys
-from datetime import datetime
 from modules.sortie import Sortie
 
 class Main:
     def __init__(self):
-        self.sortie_module = Sortie()   
+        self.sortie_module = Sortie()
     def start(self):
         print('Starting sortie...')
         self.sortie_module.start()

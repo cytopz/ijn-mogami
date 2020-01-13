@@ -381,7 +381,7 @@ class Sortie:
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(self.buttons['back'])
-        Tools.wait(7)    
+        Tools.wait(7)
 
     def get_time_elapse(self):
         delta = datetime.now() - self.start_time
@@ -389,4 +389,3 @@ class Sortie:
         minutes, seconds = divmod(remainder, 60)
         return '{} hours {} minutes {} seconds'.format(
             hours, minutes, seconds)
-
