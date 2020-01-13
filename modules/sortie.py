@@ -202,7 +202,7 @@ class Sortie:
             self.enable_auto()
         Tools.tap(self.buttons['battle_start'])
         while not Tools.find('touch_to_continue'):
-            Tools.wait(20)
+            Tools.wait(7)
         self.end_battle_handler()
         self.kill_count += 1
         Tools.wait(7)
@@ -217,7 +217,7 @@ class Sortie:
                 self.retire_ship()
                 Tools.tap(self.buttons['battle_start'])
             while not Tools.find('touch_to_continue'):
-                Tools.wait(20)
+                Tools.wait(7)
             self.end_battle_handler()
             self.mob_kill_required += 1
 
