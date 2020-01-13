@@ -125,6 +125,23 @@ class Sortie:
         self.boss_coord = Tools.find('boss', sim)
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
+            if not self.boss_coord:
+                print('boss might be overlapped. checking...')
+                self.refocus_fleet()
+                fleet_coord = self.get_fleet_coord()
+                for direction in ['down', 'left', 'right', 'up']:
+                    if Tools.find('battle_start'):
+                        self.boss_coord = self.move_one_tile(fleet_coord, direction)
+                        break
+                self.switch_fleet()
+                self.mob_coords = self.find_mobs()
+                if not self.mob_coords:
+                    self.mob_coords = self.look_around('mob', 2)
+                mob_coord = self.filter_mob_coords()
+                self.watch_for_distraction(mob_coord)
+                Tools.tap(self.buttons['back'])
+                self.switch_fleet()
+                self.boss_coord = Tools.find('boss', sim)
         self.watch_for_distraction(self.boss_coord, True)
         if self.finish:
             print("BOSS IS KILLED ABORT ABORT")
@@ -136,7 +153,7 @@ class Sortie:
             self.retire_ship()
             Tools.tap(self.buttons['battle_start'])
         while not Tools.find('touch_to_continue'):
-            Tools.wait(20)
+            Tools.wait(7)
         self.end_battle_handler()
         self.kill_count += 1
         self.finish = True
@@ -345,6 +362,16 @@ class Sortie:
 
     def fail_evade(self):
         return Tools.find('battle_start')
+
+    def move_one_tile(self, current_fleet, direction):
+        directions = {
+            'left': Dimension(current_fleet.x - 100, current_fleet.y),
+            'right': Dimension(current_fleet.x + 100, current_fleet.y),
+            'up': Dimension(current_fleet.x, current_fleet.y - 100),
+            'down': Dimension(current_fleet.x, current_fleet.y + 100)
+        }
+        Tools.tap(directions['dir'])
+        return directions['dir']
 
     def sort_time_joined(self):
         Tools.tap(self.buttons['sort_by'])
