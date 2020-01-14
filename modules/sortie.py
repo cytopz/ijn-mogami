@@ -377,15 +377,15 @@ class Sortie:
     def fail_evade(self):
         return Tools.find('battle_start')
 
-    def move_one_tile(self, current_fleet, dir):
+    def move_one_tile(self, current_fleet, direction):
         directions = {
             'left': Dimension(current_fleet.x - 100, current_fleet.y),
             'right': Dimension(current_fleet.x + 100, current_fleet.y),
             'up': Dimension(current_fleet.x, current_fleet.y - 100),
             'down': Dimension(current_fleet.x, current_fleet.y + 100)
         }
-        Tools.tap(directions[dir])
-        return directions[dir]
+        Tools.tap(directions[direction])
+        return directions[direction]
 
     def filter_retire_ship(self):
         Tools.tap(self.buttons['sort_by'])
