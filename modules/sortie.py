@@ -129,10 +129,10 @@ class Sortie:
                 print('boss might be overlapped. checking...')
                 self.refocus_fleet()
                 fleet_coord = self.get_fleet_coord()
-                for direction in ['down', 'left', 'right', 'up']:
-                    if Tools.find('battle_start'):
-                        self.boss_coord = self.move_one_tile(fleet_coord, direction)
-                        break
+                next_tile = self.move_one_tile(fleet_coord, 'up')
+                if Tools.find('battle_start'):
+                    self.boss_coord = next_tile
+                    break
                 self.switch_fleet()
                 self.mob_coords = self.find_mobs()
                 if not self.mob_coords:
