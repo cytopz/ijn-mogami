@@ -384,8 +384,8 @@ class Sortie:
             'up': Dimension(current_fleet.x, current_fleet.y - 100),
             'down': Dimension(current_fleet.x, current_fleet.y + 100)
         }
-        Tools.tap(directions['dir'])
-        return directions['dir']
+        Tools.tap(directions[dir])
+        return directions[dir]
 
     def filter_retire_ship(self):
         Tools.tap(self.buttons['sort_by'])
