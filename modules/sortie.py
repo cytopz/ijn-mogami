@@ -377,9 +377,6 @@ class Sortie:
     def fail_evade(self):
         return Tools.find('battle_start')
 
-<<<<<<< HEAD
-    def filter_retire_ship(self):
-=======
     def move_one_tile(self, current_fleet, direction):
         directions = {
             'left': Dimension(current_fleet.x - 100, current_fleet.y),
@@ -390,8 +387,7 @@ class Sortie:
         Tools.tap(directions['dir'])
         return directions['dir']
 
-    def sort_time_joined(self):
->>>>>>> boss-overlap
+    def filter_retire_ship(self):
         Tools.tap(self.buttons['sort_by'])
         Tools.tap(self.buttons['time_joined'])
         Tools.tap(self.buttons['rarity_all'])
@@ -406,10 +402,6 @@ class Sortie:
         if not self.has_filtered_retire:
             self.filter_retire_ship()
         Tools.tap(self.buttons['tobe_retired_ship'])
-
-        # while Tools.find('confirm'):
-        #    Tools.tap(Tools.find('confirm'))
-
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
         # Tap to continue
