@@ -395,4 +395,3 @@ class Sortie:
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return f'{hours} hours {minutes} minutes {seconds} seconds'
-
