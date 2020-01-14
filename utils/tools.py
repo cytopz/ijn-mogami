@@ -75,9 +75,9 @@ class Tools:
         value, location = cv2.minMaxLoc(match)[1], cv2.minMaxLoc(match)[3]
         if value >= similarity:
             if template == '':
-                print('\'{}\' not found'.format(template))
+                print(f'<{template}> not found')
             else:
-                print('Found \'{}\' ({}, {})'.format(template, location[0], location[1]))
+                print(f'Found <{template}> ({location[0]}, {location[1]})')
             return Dimension(location[0], location[1], mob)
         return None
 

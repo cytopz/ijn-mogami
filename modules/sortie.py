@@ -81,7 +81,7 @@ class Sortie:
                 Tools.tap(map_loc)
                 Tools.tap(self.buttons['go1'])
             Tools.tap(self.buttons['go2'])
-            print('Map {}, {} mob required to kill'.format(self.sortie_map, self.mob_kill_required))
+            print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         else:
             print('Map not found')
         Tools.wait(7)
@@ -387,5 +387,5 @@ class Sortie:
         delta = datetime.now() - self.start_time
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
-        return '{} hours {} minutes {} seconds'.format(
-            hours, minutes, seconds)
+        return f'{hours} hours {minutes} minutes {seconds} seconds'
+
