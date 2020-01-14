@@ -261,9 +261,9 @@ class Sortie:
             coord = Tools.find('fleet', sim)
             sim -= 0.05
         if not coord:
-            return Dimension(512, 360)
+            return Dimension(512, 210)
         coord.x += 25
-        coord.y += 120
+        coord.y += 145
         return coord
 
     def find_mobs(self):
@@ -379,10 +379,10 @@ class Sortie:
 
     def move_one_tile(self, current_fleet, direction):
         directions = {
-            'left': Dimension(current_fleet.x - 100, current_fleet.y),
-            'right': Dimension(current_fleet.x + 100, current_fleet.y),
-            'up': Dimension(current_fleet.x, current_fleet.y - 100),
-            'down': Dimension(current_fleet.x, current_fleet.y + 100)
+            'left': Dimension(current_fleet.x - 50, current_fleet.y),
+            'right': Dimension(current_fleet.x + 50, current_fleet.y),
+            'up': Dimension(current_fleet.x, current_fleet.y - 50),
+            'down': Dimension(current_fleet.x, current_fleet.y + 50)
         }
         Tools.tap(directions[direction])
         return directions[direction]
