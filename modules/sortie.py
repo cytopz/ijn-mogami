@@ -377,7 +377,7 @@ class Sortie:
     def fail_evade(self):
         return Tools.find('battle_start')
 
-    def move_one_tile(self, current_fleet, direction):
+    def move_one_tile(self, current_fleet, dir):
         directions = {
             'left': Dimension(current_fleet.x - 100, current_fleet.y),
             'right': Dimension(current_fleet.x + 100, current_fleet.y),
