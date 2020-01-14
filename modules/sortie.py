@@ -244,9 +244,6 @@ class Sortie:
             print('GOLDEN LEGENDARY bote dropped')
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm'])
-        elif not Tools.find('confirm_end_battle'):
-            Tools.tap(Dimension(785, 621))
-            Tools.tap(Dimension(785, 621))
         Tools.wait(2)
         # Tap confirm
         Tools.tap(self.buttons['confirm_battle'])  #confirm battle
