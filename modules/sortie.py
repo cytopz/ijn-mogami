@@ -25,7 +25,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '3-4'
+        self.sortie_map = '2-4'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -126,17 +126,15 @@ class Sortie:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
         self.boss_coord = Tools.find('boss', sim)
+        is_overlap_mob_fleet = True
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
-            if not self.boss_coord:
-                print('boss might be overlapped. checking...')
-                self.refocus_fleet()
-                fleet_coord = self.get_fleet_coord()
-                next_tile = self.move_one_tile(fleet_coord, 'up')
-                if Tools.find('battle_start'):
-                    self.boss_coord = next_tile
-                    break
+            if self.boss_coord:
+                break
+            print('Boss might be overlapped. checking...')
+            if is_overlap_mob_fleet:
                 self.switch_fleet()
+                fleet_coord = self.get_fleet_coord()
                 self.mob_coords = self.find_mobs()
                 if not self.mob_coords:
                     self.mob_coords = self.look_around('mob', 2)
@@ -145,6 +143,10 @@ class Sortie:
                 Tools.tap(self.buttons['back'])
                 self.switch_fleet()
                 self.boss_coord = Tools.find('boss', sim)
+                is_overlap_mob_fleet = False
+            else:
+                print('Overlapping boss fleet')
+                self.boss_coord = self.move_one_tile(self.get_fleet_coord(), 'up')
         self.watch_for_distraction(self.boss_coord, True)
         if self.finish:
             print('BOSS IS KILLED ABORT ABORT')
@@ -242,7 +244,7 @@ class Sortie:
             print('GOLDEN LEGENDARY bote dropped')
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm'])
-        else:
+        elif not Tools.find('confirm_end_battle'):
             Tools.tap(Dimension(785, 621))
             Tools.tap(Dimension(785, 621))
         Tools.wait(2)
@@ -261,7 +263,7 @@ class Sortie:
         if not coord:
             return Dimension(512, 360)
         coord.x += 25
-        coord.y += 440
+        coord.y += 120
         return coord
 
     def find_mobs(self):
