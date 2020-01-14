@@ -16,7 +16,7 @@ class Main:
         print('Starting sortie...')
         self.sortie_module.start()
     def print_time_elapse(self):
-        print(f'Sortie finished at {self.sortie_module.get_time_elapse()}'
+        print(f'Sortie finished at {self.sortie_module.get_time_elapse()}')
 
 if __name__ == '__main__':
     try:

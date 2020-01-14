@@ -26,7 +26,6 @@ class Sortie:
             'confirm': Dimension(525, 486)
         }
         self.sortie_map = '3-4'
-        self.enable_chapter_navigation = False
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -41,33 +40,9 @@ class Sortie:
         self.start_time = datetime.now()
 
     def start(self):
-        self.go_to_chapter()
         self.go_to_map()
         self.clear_mob()
         self.kill_boss()
-
-    def go_to_chapter(self):
-        if not self.enable_chapter_navigation:
-            return
-        target_chapter = int(self.sortie_map.split('-')[0])
-        current_chapter = 0
-        print('Getting current chapter...')
-        for chapter in range(1, 13):
-            if Tools.find(f'{chapter}-1'):
-                current_chapter = chapter
-                break
-        print('Current chapter found : ', current_chapter)
-        print('Target chapter : ', target_chapter)
-        if current_chapter != 0:
-            difference = target_chapter - current_chapter
-            for _ in range(0, abs(difference)):
-                if difference >= 1:
-                    print('Selecting next chapter')
-                    Tools.tap(self.buttons['chapter_next'])
-                else:
-                    print('Selecting previous chapter')
-                    Tools.tap(self.buttons['chapter_prev'])
-            print('Reached target chapter ', target_chapter)
 
     def go_to_map(self):
         if Tools.find('urgent', 0.725):
@@ -84,7 +59,30 @@ class Sortie:
             print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         else:
             print('Map not found')
+            self.go_to_chapter()
         Tools.wait(7)
+
+    def go_to_chapter(self):
+        target_chapter = int(self.sortie_map.split('-')[0])
+        current_chapter = 0
+        print('Getting current chapter...')
+        for chapter in range(1, 13):
+            if Tools.find(f'{chapter}-1'):
+                current_chapter = chapter
+                break
+        if current_chapter != 0:
+            print('Current chapter found : ', current_chapter)
+            print('Target chapter : ', target_chapter)
+            difference = target_chapter - current_chapter
+            for _ in range(0, abs(difference)):
+                if difference >= 1:
+                    print('Selecting next chapter')
+                    Tools.tap(self.buttons['chapter_next'])
+                else:
+                    print('Selecting previous chapter')
+                    Tools.tap(self.buttons['chapter_prev'])
+            print('Reached chapter ', target_chapter)
+            self.go_to_map()
 
     def clear_mob(self):
         if self.mob_fleet > 1:
