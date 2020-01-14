@@ -215,12 +215,19 @@ class Sortie:
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(Dimension(785, 621))
-        # TODO: implement >SR botes
         if Tools.find('rare'):
             print('new BLUE bote dropped. locking...')
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm'])
-        elif not Tools.find('confirm_end_battle'):
+        elif Tools.find('elite'):
+            print('PURPLE bote dropped')
+            Tools.tap(Dimension(785, 621))
+            Tools.tap(self.buttons['confirm'])
+        elif Tools.find('super_rare'):
+            print('GOLDEN LEGENDARY bote dropped')
+            Tools.tap(Dimension(785, 621))
+            Tools.tap(self.buttons['confirm'])
+        else:
             Tools.tap(Dimension(785, 621))
             Tools.tap(Dimension(785, 621))
         Tools.wait(2)
