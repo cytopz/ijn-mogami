@@ -1,4 +1,5 @@
 from utils.tools import Tools, Dimension, MapDetail
+from datetime import datetime
 
 class Sortie:
     def __init__(self):
@@ -12,6 +13,9 @@ class Sortie:
             'back': Dimension(50, 45),
             'sort_by': Dimension(907, 28),
             'time_joined': Dimension(657, 141),
+            'rarity_all': Dimension(280, 473),
+            'rarity_common': Dimension(412, 473),
+            'rarity_rare': Dimension(538, 473),
             'disassemble': Dimension(639, 529),
             'confirm_battle': Dimension(860, 600),
             'strategy_panel': Dimension(865, 504),
@@ -21,7 +25,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '12-1'
+        self.sortie_map = '3-4'
         self.enable_chapter_navigation = False
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
@@ -33,6 +37,8 @@ class Sortie:
         self.boss_coord = None
         self.fleet_coord = None
         self.finish = False
+        self.has_filtered_retire = False
+        self.start_time = datetime.now()
 
     def start(self):
         self.go_to_chapter()
@@ -45,24 +51,23 @@ class Sortie:
             return
         target_chapter = int(self.sortie_map.split('-')[0])
         current_chapter = 0
-        print('getting current chapter...')
+        print('Getting current chapter...')
         for chapter in range(1, 13):
             if Tools.find(f'{chapter}-1'):
                 current_chapter = chapter
                 break
-        print('current chapter found : ', current_chapter)
-        print('target chapter : ', target_chapter)
+        print('Current chapter found : ', current_chapter)
+        print('Target chapter : ', target_chapter)
         if current_chapter != 0:
             difference = target_chapter - current_chapter
-            print('chapter difference', difference)
             for _ in range(0, abs(difference)):
                 if difference >= 1:
-                    print('selecting next chapter')
+                    print('Selecting next chapter')
                     Tools.tap(self.buttons['chapter_next'])
                 else:
-                    print('selecting previous chapter')
+                    print('Selecting previous chapter')
                     Tools.tap(self.buttons['chapter_prev'])
-            print('reached target chapter ', target_chapter)
+            print('Reached target chapter ', target_chapter)
 
     def go_to_map(self):
         if Tools.find('urgent', 0.725):
@@ -76,9 +81,9 @@ class Sortie:
                 Tools.tap(map_loc)
                 Tools.tap(self.buttons['go1'])
             Tools.tap(self.buttons['go2'])
-            print(self.mob_kill_required, "mob required to kill")
+            print('Map {}, {} mob required to kill'.format(self.sortie_map, self.mob_kill_required))
         else:
-            print("map not found")
+            print('Map not found')
         Tools.wait(7)
 
     def clear_mob(self):
@@ -114,7 +119,7 @@ class Sortie:
     def kill_boss(self):
         sim = 0.9
         if self.finish:
-            print("BOSS IS KILLED ABORT ABORT")
+            print('BOSS IS KILLED ABORT ABORT')
             return
         if Tools.find('urgent', 0.765):
             Tools.tap(self.buttons['confirm'])
@@ -127,7 +132,7 @@ class Sortie:
             self.boss_coord = self.look_around('boss', 1)
         self.watch_for_distraction(self.boss_coord, True)
         if self.finish:
-            print("BOSS IS KILLED ABORT ABORT")
+            print('BOSS IS KILLED ABORT ABORT')
             return
         Tools.tap(self.buttons['battle_start'])
         if not self.is_auto_enabled():
@@ -144,15 +149,13 @@ class Sortie:
 
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
-        Tools.tap(mob_coord)
-        while Tools.find('attack'):
+        while True:
             if Tools.find('cant_reach'):
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
             if Tools.find('sort'):
                 self.retire_ship()
-                Tools.tap(mob_coord)
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
                 if any(self.mob_coords.values()):
@@ -162,8 +165,12 @@ class Sortie:
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
             if self.finish:
-                print("BOSS IS KILLED ABORT ABORT")
+                print('BOSS IS KILLED ABORT ABORT')
                 return
+            if Tools.find('battle_start'):
+                print('Starting battle...')
+                return
+            print('Attacking ', mob_coord)
             Tools.tap(mob_coord)
             tap_count += 1
 
@@ -213,7 +220,7 @@ class Sortie:
             print('new BLUE bote dropped. locking...')
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm'])
-        else:
+        elif not Tools.find('confirm_end_battle'):
             Tools.tap(Dimension(785, 621))
             Tools.tap(Dimension(785, 621))
         Tools.wait(2)
@@ -256,8 +263,8 @@ class Sortie:
                     break
                 if coords:
                     mob_coords[key] += list(filter(lambda x, k=key: x not in mob_coords[k], coords))
-                print(f'{key} : {mob_coords[key]}')
                 sim -= 0.025
+            print(f'{key} : {mob_coords[key]}')
             sim = 0.95
             sim_min = 0.6
         Tools.delete_screen()
@@ -268,11 +275,11 @@ class Sortie:
         mob_coords = []
         if blacklist:
             for key in self.mob_coords:
-                print("blacklist : ", self.mob_coords[key])
+                print('Blacklist : ', self.mob_coords[key])
                 if not self.mob_coords[key]:
                     continue
                 if blacklist in self.mob_coords[key]:
-                    print("remove blacklist")
+                    print('Remove blacklist')
                     self.mob_coords[key].remove(blacklist)
         if boss_coord:
             center_point = boss_coord
@@ -286,7 +293,7 @@ class Sortie:
             for coord in coords:
                 x, y = coord.x, coord.y
                 mob_coords.append((x, y))
-                print(coord)
+                # print(coord)
             if mob_coords:
                 break
         if len(mob_coords) == 1:
@@ -299,18 +306,18 @@ class Sortie:
         mid = Dimension(512, 384)
         x_dist = 2100
         y_dist = 1100
-        swipe_directions = ['r', 'd', 'l', 'u']
+        swipe_directions = ['right', 'down', 'left', 'up']
         for swp in swipe_directions:
-            if swp == 'r':
+            print('Swipe: ', swp)
+            if swp == 'right':
                 Tools.swipe(mid, Dimension(mid.x + x_dist, mid.y))
-            elif swp == 'd':
+            elif swp == 'down':
                 Tools.swipe(mid, Dimension(mid.x, mid.y + y_dist))
-            elif swp == 'l':
+            elif swp == 'left':
                 Tools.swipe(mid, Dimension(mid.x - x_dist, mid.y))
             else:
                 Tools.swipe(mid, Dimension(mid.x, mid.y - y_dist))
             while not coord:
-                print("swipe: ", swp)
                 if sim <= sim_min:
                     break
                 coord = Tools.find(what, sim) if mode == 1 else self.find_mobs()
@@ -346,14 +353,20 @@ class Sortie:
     def fail_evade(self):
         return Tools.find('battle_start')
 
-    def sort_time_joined(self):
+    def filter_retire_ship(self):
         Tools.tap(self.buttons['sort_by'])
         Tools.tap(self.buttons['time_joined'])
+        Tools.tap(self.buttons['rarity_all'])
+        Tools.tap(self.buttons['rarity_common'])
+        Tools.tap(self.buttons['rarity_rare'])
         Tools.tap(Dimension(639, 606))          # confirm button
+        self.has_filtered_retire = True
 
     def retire_ship(self):
+        print('Retiring ship...')
         Tools.tap(self.buttons['sort'])
-        self.sort_time_joined()
+        if not self.has_filtered_retire:
+            self.filter_retire_ship()
         Tools.tap(self.buttons['tobe_retired_ship'])
 
         # while Tools.find('confirm'):
@@ -361,7 +374,6 @@ class Sortie:
 
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
-        Tools.tap(Dimension(635, 481))       # confirm2.5 (>=rare botes)
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(Dimension(765, 511))       # confirm3
@@ -370,3 +382,10 @@ class Sortie:
         Tools.tap(Dimension(785, 621))
         Tools.tap(self.buttons['back'])
         Tools.wait(7)
+
+    def get_time_elapse(self):
+        delta = datetime.now() - self.start_time
+        hours, remainder = divmod(delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return '{} hours {} minutes {} seconds'.format(
+            hours, minutes, seconds)
