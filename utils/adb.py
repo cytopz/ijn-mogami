@@ -1,11 +1,12 @@
 import subprocess
+import sys
 
 class Adb:
     def __init__(self):
         self.start_server()
         if not self.device_available:
             print("No devices detected.")
-            exit()
+            sys.exit(1)
 
     def start_server(self):
         try:
@@ -13,7 +14,7 @@ class Adb:
         except Exception as e:
             print('adb was not found. exiting...')
             print(e)
-            exit()
+            sys.exit(1)
 
     def device_available(self):
         devices = subprocess.Popen('adb devices'.split(' '),
