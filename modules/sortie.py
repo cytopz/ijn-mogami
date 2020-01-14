@@ -25,7 +25,7 @@ class Sortie:
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486)
         }
-        self.sortie_map = '3-4'
+        self.sortie_map = '2-4'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -131,8 +131,8 @@ class Sortie:
             if not self.boss_coord:
                 print('boss might be overlapped. checking...')
                 self.refocus_fleet()
-                fleet_coord = self.get_fleet_coord()
-                next_tile = self.move_one_tile(fleet_coord, 'up')
+                self.fleet_coord = self.get_fleet_coord()
+                next_tile = self.move_one_tile(self.fleet_coord, 'up')
                 if Tools.find('battle_start'):
                     self.boss_coord = next_tile
                     break
@@ -259,9 +259,9 @@ class Sortie:
             coord = Tools.find('fleet', sim)
             sim -= 0.05
         if not coord:
-            return Dimension(512, 360)
+            return Dimension(512, 210)
         coord.x += 25
-        coord.y += 440
+        coord.y += 145
         return coord
 
     def find_mobs(self):
@@ -377,10 +377,10 @@ class Sortie:
 
     def move_one_tile(self, current_fleet, direction):
         directions = {
-            'left': Dimension(current_fleet.x - 100, current_fleet.y),
-            'right': Dimension(current_fleet.x + 100, current_fleet.y),
-            'up': Dimension(current_fleet.x, current_fleet.y - 100),
-            'down': Dimension(current_fleet.x, current_fleet.y + 100)
+            'left': Dimension(current_fleet.x - 50, current_fleet.y),
+            'right': Dimension(current_fleet.x + 50, current_fleet.y),
+            'up': Dimension(current_fleet.x, current_fleet.y - 50),
+            'down': Dimension(current_fleet.x, current_fleet.y + 50)
         }
         Tools.tap(directions[direction])
         return directions[direction]
