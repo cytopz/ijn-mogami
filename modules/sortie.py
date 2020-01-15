@@ -8,24 +8,27 @@ class Sortie:
             'auto_battle': Dimension(692, 163),
             'switch_fleet': Dimension(825, 685),
             'evade': Dimension(872, 451),
-            'sort': Dimension(357, 483),
-            'tobe_retired_ship': Dimension(100, 109),
-            'back': Dimension(50, 45),
-            'sort_by': Dimension(907, 28),
-            'time_joined': Dimension(657, 141),
-            'rarity_all': Dimension(280, 473),
-            'rarity_common': Dimension(412, 473),
-            'rarity_rare': Dimension(538, 473),
-            'disassemble': Dimension(639, 529),
             'confirm_battle': Dimension(860, 600),
             'strategy_panel': Dimension(865, 504),
             'chapter_prev' : Dimension(43, 497),
             'chapter_next' : Dimension(984, 425),
             'go1': Dimension(759, 487),
             'go2': Dimension(864, 554),
-            'confirm': Dimension(525, 486)
+            'confirm': Dimension(525, 486),
+            # Retire related
+            'sort': Dimension(357, 483),
+            'back': Dimension(50, 45),
+            'sort_by': Dimension(907, 28),
+            'time_joined': Dimension(657, 141),
+            'index_all': Dimension(280, 260),
+            'faction_all': Dimension(280, 365),
+            'rarity_all': Dimension(280, 473),
+            'rarity_common': Dimension(412, 473),
+            'rarity_rare': Dimension(538, 473),
+            'disassemble': Dimension(639, 529)
+            
         }
-        self.sortie_map = '2-4'
+        self.sortie_map = '2-2'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -36,7 +39,7 @@ class Sortie:
         self.boss_coord = None
         self.fleet_coord = None
         self.finish = False
-        self.has_filtered_retire = False
+        self.is_retire_filtered = False
         self.start_time = datetime.now()
 
     def start(self):
@@ -48,18 +51,18 @@ class Sortie:
         if Tools.find('urgent', 0.725):
             Tools.tap(self.buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
-        if map_loc:
-            Tools.tap(map_loc)
-            Tools.tap(self.buttons['go1'])
-            if self.is_deck_full():
-                self.retire_ship()
-                Tools.tap(map_loc)
-                Tools.tap(self.buttons['go1'])
-            Tools.tap(self.buttons['go2'])
-            print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
-        else:
+        if not map_loc:
             print('Map not found')
             self.go_to_chapter()
+            map_loc = Tools.find(self.sortie_map)
+        Tools.tap(map_loc)
+        Tools.tap(self.buttons['go1'])
+        if self.is_deck_full():
+            self.retire_ship()
+            Tools.tap(map_loc)
+            Tools.tap(self.buttons['go1'])
+        Tools.tap(self.buttons['go2'])
+        print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         Tools.wait(7)
 
     def go_to_chapter(self):
@@ -82,7 +85,6 @@ class Sortie:
                     print('Selecting previous chapter')
                     Tools.tap(self.buttons['chapter_prev'])
             print('Reached chapter ', target_chapter)
-            self.go_to_map()
 
     def clear_mob(self):
         if self.mob_fleet > 1:
@@ -102,17 +104,38 @@ class Sortie:
                 self.mob_coords = self.look_around('mobs', 2)
             mob_coord = self.filter_mob_coords()
             self.watch_for_distraction(mob_coord)
-            if not self.is_auto_enabled:
-                self.enable_auto()
+            self.start_battle()
+
+    def start_battle(self, is_boss = False):
+        if self.finish:
+            print('BOSS IS KILLED ABORT ABORT')
+            return
+        
+        # Battle preparation
+        print('Battle started')
+        Tools.tap(self.buttons['battle_start'])
+        if self.is_deck_full():
+            print('Interrupted, dock full')
+            self.retire_ship()
             Tools.tap(self.buttons['battle_start'])
-            if self.is_deck_full():
-                self.retire_ship()
-                Tools.tap(self.buttons['battle_start'])
-            while not Tools.find('touch_to_continue'):
-                Tools.wait(5)
-            self.end_battle_handler()
-            self.kill_count += 1
-            Tools.wait(7)
+            print('Resuming battle')
+        
+        # Battle in progress     
+        print('Battle in progress...')   
+        while not Tools.find('touch_to_continue'):
+            # Checking if manual control
+            if Tools.find('auto_battle'):
+                self.enable_auto()
+            Tools.wait(5)
+        
+        # Battle ended
+        print('Battle ended')
+        self.end_battle_handler()
+        self.kill_count += 1
+        print(f'Mob kill count : {self.kill_count}')
+        if is_boss:
+            self.finish = True
+        Tools.wait(7)
 
     def kill_boss(self):
         sim = 0.9
@@ -131,8 +154,8 @@ class Sortie:
             self.boss_coord = self.look_around('boss', 1)
             if self.boss_coord:
                 break
-            print('Boss might be overlapped. checking...')
             if is_overlap_mob_fleet:
+                print('Boss might be overlapped with mob fleet. Checking...')
                 self.switch_fleet()
                 fleet_coord = self.get_fleet_coord()
                 self.mob_coords = self.find_mobs()
@@ -145,24 +168,10 @@ class Sortie:
                 self.boss_coord = Tools.find('boss', sim)
                 is_overlap_mob_fleet = False
             else:
-                print('Overlapping boss fleet')
+                print('Boss might be overlapped with boss fleet. Moving boss fleet...')
                 self.boss_coord = self.move_one_tile(self.get_fleet_coord(), 'up')
         self.watch_for_distraction(self.boss_coord, True)
-        if self.finish:
-            print('BOSS IS KILLED ABORT ABORT')
-            return
-        Tools.tap(self.buttons['battle_start'])
-        if not self.is_auto_enabled():
-            self.enable_auto()
-        if self.is_deck_full():
-            self.retire_ship()
-            Tools.tap(self.buttons['battle_start'])
-        while not Tools.find('touch_to_continue'):
-            Tools.wait(7)
-        self.end_battle_handler()
-        self.kill_count += 1
-        self.finish = True
-        Tools.wait(7)
+        self.start_battle(True)
 
     def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
@@ -171,8 +180,6 @@ class Sortie:
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
-            if Tools.find('sort'):
-                self.retire_ship()
             if tap_count == 9:
                 mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
                 if any(self.mob_coords.values()):
@@ -185,7 +192,7 @@ class Sortie:
                 print('BOSS IS KILLED ABORT ABORT')
                 return
             if Tools.find('battle_start'):
-                print('Starting battle...')
+                print('Entering battle formation')
                 return
             print('Attacking ', mob_coord)
             Tools.tap(mob_coord)
@@ -205,14 +212,7 @@ class Sortie:
             self.boss_coord = Dimension(512, 360)
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
         self.watch_for_distraction(mob_coord)
-        if not self.is_auto_enabled():
-            self.enable_auto()
-        Tools.tap(self.buttons['battle_start'])
-        while not Tools.find('touch_to_continue'):
-            Tools.wait(7)
-        self.end_battle_handler()
-        self.kill_count += 1
-        Tools.wait(7)
+        self.start_battle()
         self.kill_boss()
 
     def ambush_handler(self):
@@ -223,8 +223,15 @@ class Sortie:
             if self.is_deck_full():
                 self.retire_ship()
                 Tools.tap(self.buttons['battle_start'])
+                
+            # Battle in progress        
             while not Tools.find('touch_to_continue'):
-                Tools.wait(7)
+                # Checking if manual control
+                if Tools.find('auto_battle'):
+                    self.enable_auto()
+                Tools.wait(5)
+            
+            print('Battle ended')    
             self.end_battle_handler()
             self.mob_kill_required += 1
 
@@ -258,9 +265,9 @@ class Sortie:
             coord = Tools.find('fleet', sim)
             sim -= 0.05
         if not coord:
-            return Dimension(512, 210)
+            return Dimension(512, 360)
         coord.x += 25
-        coord.y += 145
+        coord.y += 120
         return coord
 
     def find_mobs(self):
@@ -273,6 +280,7 @@ class Sortie:
         sim = 0.95
         sim_min = 0.625
         coords = []
+        print('Searching mobs...')
         for key in mob_coords:
             while sim >= sim_min:
                 if key == 'small':
@@ -285,7 +293,7 @@ class Sortie:
                 if coords:
                     mob_coords[key] += list(filter(lambda x, k=key: x not in mob_coords[k], coords))
                 sim -= 0.025
-            print(f'{key} : {mob_coords[key]}')
+            print(f' - {key} : {mob_coords[key]}')
             sim = 0.95
             sim_min = 0.6
         Tools.delete_screen()
@@ -355,9 +363,6 @@ class Sortie:
     def is_deck_full(self):
         return Tools.find('sort', 0.7)
 
-    def is_auto_enabled(self):
-        return not Tools.find('auto', 0.8)
-
     def refocus_fleet(self):
         self.switch_fleet()
         self.switch_fleet()
@@ -366,20 +371,23 @@ class Sortie:
         Tools.tap(self.buttons['switch_fleet'])
 
     def enable_auto(self):
-        Tools.tap(self.buttons['auto_battle'])
+        print('Enabling auto combat')
+        Tools.tap(Dimension(50, 110))
 
     def evade(self):
+        print('Evading ambush')
         Tools.tap(self.buttons['evade'])
 
     def fail_evade(self):
+        print('Failed to evade')
         return Tools.find('battle_start')
 
     def move_one_tile(self, current_fleet, direction):
         directions = {
-            'left': Dimension(current_fleet.x - 50, current_fleet.y),
-            'right': Dimension(current_fleet.x + 50, current_fleet.y),
-            'up': Dimension(current_fleet.x, current_fleet.y - 50),
-            'down': Dimension(current_fleet.x, current_fleet.y + 50)
+            'left': Dimension(current_fleet.x - 100, current_fleet.y),
+            'right': Dimension(current_fleet.x + 100, current_fleet.y),
+            'up': Dimension(current_fleet.x, current_fleet.y - 100),
+            'down': Dimension(current_fleet.x, current_fleet.y + 100)
         }
         Tools.tap(directions[direction])
         return directions[direction]
@@ -387,6 +395,8 @@ class Sortie:
     def filter_retire_ship(self):
         Tools.tap(self.buttons['sort_by'])
         Tools.tap(self.buttons['time_joined'])
+        Tools.tap(self.buttons['index_all'])
+        Tools.tap(self.buttons['faction_all'])
         Tools.tap(self.buttons['rarity_all'])
         Tools.tap(self.buttons['rarity_common'])
         Tools.tap(self.buttons['rarity_rare'])
@@ -396,9 +406,13 @@ class Sortie:
     def retire_ship(self):
         print('Retiring ship...')
         Tools.tap(self.buttons['sort'])
-        if not self.has_filtered_retire:
+        if not self.is_retire_filtered:
             self.filter_retire_ship()
-        Tools.tap(self.buttons['tobe_retired_ship'])
+        # Selecting one row botes
+        x = 130
+        for i in range(7):
+            Tools.tap(Dimension(x, 150))
+            x += 130
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
         # Tap to continue
