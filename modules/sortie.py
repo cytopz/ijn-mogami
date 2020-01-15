@@ -124,7 +124,6 @@ class Sortie:
             # Checking if manual control
             if Tools.find('auto_battle'):
                 self.enable_auto()
-            Tools.wait(5)
         # Battle ended
         print('Battle ended')
         self.end_battle_handler()
