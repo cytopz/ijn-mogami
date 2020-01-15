@@ -27,5 +27,5 @@ if __name__ == '__main__':
             mogami.print_time_elapse()
             Tools.wait(3)
     except KeyboardInterrupt:
-            print("Exiting...")
+            print('\nExiting...')
             sys.exit(0)
