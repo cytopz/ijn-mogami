@@ -15,7 +15,6 @@ class Sortie:
             'go1': Dimension(759, 487),
             'go2': Dimension(864, 554),
             'confirm': Dimension(525, 486),
-            # Retire related
             'sort': Dimension(357, 483),
             'back': Dimension(50, 45),
             'sort_by': Dimension(907, 28),
@@ -29,7 +28,7 @@ class Sortie:
             'disassemble': Dimension(639, 529)
             
         }
-        self.sortie_map = '3-4'
+        self.sortie_map = '11-2'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -107,11 +106,10 @@ class Sortie:
             self.watch_for_distraction(mob_coord)
             self.start_battle()
 
-    def start_battle(self, is_boss = False):
+    def start_battle(self, is_boss=False):
         if self.finish:
             print('BOSS IS KILLED ABORT ABORT')
             return
-        
         # Battle preparation
         print('Battle started')
         Tools.tap(self.buttons['battle_start'])
@@ -120,7 +118,6 @@ class Sortie:
             self.retire_ship()
             Tools.tap(self.buttons['battle_start'])
             print('Resuming battle')
-        
         # Battle in progress     
         print('Battle in progress...')   
         while not Tools.find('touch_to_continue'):
@@ -128,7 +125,6 @@ class Sortie:
             if Tools.find('auto_battle'):
                 self.enable_auto()
             Tools.wait(5)
-        
         # Battle ended
         print('Battle ended')
         self.end_battle_handler()
@@ -225,14 +221,12 @@ class Sortie:
             if self.is_deck_full():
                 self.retire_ship()
                 Tools.tap(self.buttons['battle_start'])
-                
             # Battle in progress        
             while not Tools.find('touch_to_continue'):
                 # Checking if manual control
                 if Tools.find('auto_battle'):
                     self.enable_auto()
                 Tools.wait(5)
-            
             print('Battle ended')    
             self.end_battle_handler()
             self.mob_kill_required += 1
@@ -402,7 +396,7 @@ class Sortie:
         Tools.tap(self.buttons['rarity_common'])
         Tools.tap(self.buttons['rarity_rare'])
         Tools.tap(Dimension(639, 606))          # confirm button
-        self.has_filtered_retire = True
+        self.is_retire_filtered = True
 
     def retire_ship(self):
         print('Retiring ship...')
