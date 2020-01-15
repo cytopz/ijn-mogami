@@ -100,13 +100,14 @@ class Tools:
         return []
 
     @classmethod
-    def tap(self, dimension):
+    def tap(self, dimension, delay=1.5):
         Adb.shell(f'input tap {dimension.x} {dimension.y}')
-        time.sleep(1.5)
+        self.wait(delay)
 
     @classmethod
-    def swipe(self, dimension1, dimension2):
-        Adb.shell(f'input swipe {dimension1.x} {dimension1.y} {dimension2.x} {dimension2.y} 250')
+    def swipe(self, dimension1, dimension2, duration=250):
+        Adb.shell(f'input swipe {dimension1.x} {dimension1.y} {dimension2.x} {dimension2.y}
+                {duration}')
 
     @classmethod
     def fix_locs(self, locs):
