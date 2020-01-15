@@ -25,10 +25,11 @@ class Sortie:
             'rarity_all': Dimension(280, 473),
             'rarity_common': Dimension(412, 473),
             'rarity_rare': Dimension(538, 473),
+            'tobe_retired_ship': Dimension(130, 150),
             'disassemble': Dimension(639, 529)
             
         }
-        self.sortie_map = '2-2'
+        self.sortie_map = '3-4'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -219,6 +220,7 @@ class Sortie:
         self.evade()
         Tools.wait(3.5)
         if self.fail_evade():
+            print('Failed to evade')
             Tools.tap(self.buttons['battle_start'])
             if self.is_deck_full():
                 self.retire_ship()
@@ -379,7 +381,6 @@ class Sortie:
         Tools.tap(self.buttons['evade'])
 
     def fail_evade(self):
-        print('Failed to evade')
         return Tools.find('battle_start')
 
     def move_one_tile(self, current_fleet, direction):
@@ -409,10 +410,10 @@ class Sortie:
         if not self.is_retire_filtered:
             self.filter_retire_ship()
         # Selecting one row botes
-        x = 130
-        for i in range(7):
-            Tools.tap(Dimension(x, 150))
-            x += 130
+        ship = self.buttons['tobe_retired_ship']
+        for _ in range(7):
+            Tools.tap(ship)
+            ship.x += 130
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
         # Tap to continue
