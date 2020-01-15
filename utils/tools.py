@@ -56,6 +56,9 @@ class Dimension:
                 self.y += delta + 25
 
 class Tools:
+
+    DEBUG_MODE = False
+
     SIMILARITY_VALUE = 0.8
     CURRENT_SCREEN = np.array([[]])
     UPDATED = False
@@ -74,17 +77,17 @@ class Tools:
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         value, location = cv2.minMaxLoc(match)[1], cv2.minMaxLoc(match)[3]
         if value >= similarity:
-            if template == '':
-                print(f'<{template}> not found')
-            else:
-                print(f'Found <{template}> ({location[0]}, {location[1]})')
+            if self.DEBUG_MODE:
+                if template == '':
+                    print(f'<{template}> not found')
+                else:
+                    print(f'Found <{template}> ({location[0]}, {location[1]})')
             return Dimension(location[0], location[1], mob)
         return None
 
     @classmethod
     def find_multi(self, template, similarity=SIMILARITY_VALUE, mob=False, siren=False):
         if (mob or siren) and not self.CURRENT_SCREEN.any():
-            print('Searching mobs...')
             self.CURRENT_SCREEN = self.update_screen()
         screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
         img_template = cv2.imread(f'assets/{template}.png', 0)

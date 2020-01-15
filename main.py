@@ -8,6 +8,7 @@
 
 import sys
 from modules.sortie import Sortie
+from utils.tools import Tools
 
 class Main:
     def __init__(self):
@@ -24,6 +25,7 @@ if __name__ == '__main__':
             mogami = Main()
             mogami.start()
             mogami.print_time_elapse()
+            Tools.wait(3)
     except KeyboardInterrupt:
             print("Exiting...")
             sys.exit(0)
