@@ -387,7 +387,7 @@ class Sortie:
         return directions[direction]
 
     def filter_retire_ship(self):
-        Tools.tap(self.buttons['sort_by'], 0.5)
+        Tools.tap(self.buttons['sort_by'], 1)
         Tools.tap(self.buttons['time_joined'], 0.5)
         Tools.tap(self.buttons['index_all'], 0.5)
         Tools.tap(self.buttons['faction_all'], 0.5)
