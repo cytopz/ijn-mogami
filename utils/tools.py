@@ -106,8 +106,7 @@ class Tools:
 
     @classmethod
     def swipe(self, dimension1, dimension2, duration=250):
-        Adb.shell(f'input swipe {dimension1.x} {dimension1.y} {dimension2.x} {dimension2.y}
-                {duration}')
+        Adb.shell(f'input swipe {dimension1.x} {dimension1.y} {dimension2.x} {dimension2.y} {duration}')
 
     @classmethod
     def fix_locs(self, locs):
