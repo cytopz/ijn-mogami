@@ -127,7 +127,6 @@ class Sortie:
         # Battle ended
         print('Battle ended')
         self.end_battle_handler()
-        self.kill_count += 1
         print(f'Mob kill count : {self.kill_count}')
         if is_boss:
             self.finish = True
@@ -228,7 +227,6 @@ class Sortie:
                 Tools.wait(5)
             print('Battle ended')    
             self.end_battle_handler()
-            self.kill_count += 1
             self.mob_kill_required += 1
 
     def end_battle_handler(self):
@@ -250,6 +248,7 @@ class Sortie:
         Tools.wait(2)
         # Tap confirm
         Tools.tap(self.buttons['confirm_battle'])  #confirm battle
+        self.kill_count += 1
 
     def get_fleet_coord(self):
         coord = None
