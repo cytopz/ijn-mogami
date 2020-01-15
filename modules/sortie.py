@@ -228,6 +228,7 @@ class Sortie:
                 Tools.wait(5)
             print('Battle ended')    
             self.end_battle_handler()
+            self.kill_count += 1
             self.mob_kill_required += 1
 
     def end_battle_handler(self):
@@ -268,9 +269,9 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
+            'large': [],
             'medium': [],
             'small': [],
-            'large': []
         }
         sim = 0.95
         sim_min = 0.625
