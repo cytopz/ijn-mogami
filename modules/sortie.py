@@ -387,25 +387,25 @@ class Sortie:
         return directions[direction]
 
     def filter_retire_ship(self):
-        Tools.tap(self.buttons['sort_by'])
-        Tools.tap(self.buttons['time_joined'])
-        Tools.tap(self.buttons['index_all'])
-        Tools.tap(self.buttons['faction_all'])
-        Tools.tap(self.buttons['rarity_all'])
-        Tools.tap(self.buttons['rarity_common'])
-        Tools.tap(self.buttons['rarity_rare'])
+        Tools.tap(self.buttons['sort_by'], 0.5)
+        Tools.tap(self.buttons['time_joined'], 0.5)
+        Tools.tap(self.buttons['index_all'], 0.5)
+        Tools.tap(self.buttons['faction_all'], 0.5)
+        Tools.tap(self.buttons['rarity_all'], 0.5)
+        Tools.tap(self.buttons['rarity_common'], 0.5)
+        Tools.tap(self.buttons['rarity_rare'], 0.5)
         Tools.tap(Dimension(639, 606))          # confirm button
         self.is_retire_filtered = True
 
     def retire_ship(self):
         print('Retiring ship...')
-        Tools.tap(self.buttons['sort'])
+        Tools.tap(self.buttons['sort'], 1.7)
         if not self.is_retire_filtered:
             self.filter_retire_ship()
         # Selecting one row botes
         ship = self.buttons['tobe_retired_ship']
         for _ in range(7):
-            Tools.tap(ship)
+            Tools.tap(ship, 0.5)
             ship.x += 130
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
