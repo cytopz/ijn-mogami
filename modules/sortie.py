@@ -128,8 +128,7 @@ class Sortie:
         print('Battle ended')
         self.end_battle_handler()
         print(f'Mob kill count : {self.kill_count}')
-        if is_boss:
-            self.finish = True
+        self.finish = is_boss
         Tools.wait(7)
 
     def kill_boss(self):
@@ -166,17 +165,16 @@ class Sortie:
                 print('Boss might be overlapped with boss fleet. Moving boss fleet...')
                 self.boss_coord = self.move_one_tile(self.get_fleet_coord(), 'up')
         self.watch_for_distraction(self.boss_coord, from_boss=True)
+        if self.finish:
+            print('BOSS IS KILLED ABORT ABORT')
+            return
         self.start_battle(True)
 
-    def watch_for_distraction(self, mob_coord, from_boss=False, from_cant_reach=False):
+    def watch_for_distraction(self, mob_coord, from_boss=False):
         tap_count = 0
         while True:
             if Tools.find('cant_reach'):
-                if from_cant_reach:
-                    self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
-                    mob_coord = self.filter_mob_coords()
-                else:
-                    mob_coord = self.cant_reach_handler(mob_coord, from_boss)
+                mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
             if tap_count == 9:
@@ -188,12 +186,12 @@ class Sortie:
                 self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
-            if not mob_coord:
-                self.mob_coords = self.look_around('mobs', 2) 
-                mob_coord = self.filter_mob_coords()
             if self.finish:
                 print('BOSS IS KILLED ABORT ABORT')
                 return
+            if not mob_coord:
+                self.mob_coords = self.look_around('mobs', 2) 
+                mob_coord = self.filter_mob_coords()
             if Tools.find('battle_start'):
                 print('Entering battle formation')
                 return
@@ -214,7 +212,7 @@ class Sortie:
             self.mob_coords = self.look_around('mobs', 2)
             self.boss_coord = Dimension(512, 360)
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
-        self.watch_for_distraction(mob_coord, from_cant_reach=True)
+        self.watch_for_distraction(mob_coord)
         self.start_battle()
         self.kill_boss()
 
