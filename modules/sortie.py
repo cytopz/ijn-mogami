@@ -165,15 +165,18 @@ class Sortie:
             else:
                 print('Boss might be overlapped with boss fleet. Moving boss fleet...')
                 self.boss_coord = self.move_one_tile(self.get_fleet_coord(), 'up')
-        self.watch_for_distraction(self.boss_coord, True)
+        self.watch_for_distraction(self.boss_coord, from_boss=True)
         self.start_battle(True)
 
     def watch_for_distraction(self, mob_coord, from_boss=False, from_cant_reach=False):
         tap_count = 0
         while True:
             if Tools.find('cant_reach'):
-                mob_coord = (self.look_around('mobs', 2, blacklist=mob_coord) if from_cant_reach
-                            else self.cant_reach_handler(mob_coord, from_boss))
+                if from_cant_reach:
+                    self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
+                    mob_coord = self.filter_mob_coords()
+                else:
+                    mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
             if tap_count == 9:
@@ -186,7 +189,8 @@ class Sortie:
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
             if not mob_coord:
-                mob_coord = self.look_around('mobs', 2) 
+                self.mob_coords = self.look_around('mobs', 2) 
+                mob_coord = self.filter_mob_coords()
             if self.finish:
                 print('BOSS IS KILLED ABORT ABORT')
                 return
