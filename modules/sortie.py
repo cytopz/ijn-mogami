@@ -28,7 +28,7 @@ class Sortie:
             'disassemble': Dimension(639, 529)
             
         }
-        self.sortie_map = '11-2'
+        self.sortie_map = '9-3'
         self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
         self.kill_count = 0
         self.switch_boss = True
@@ -90,7 +90,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        # Tools.swipe(Dimension(512, 384), Dimension(12, 384))
+        Tools.swipe(Dimension(512, 384), Dimension(612, 384))
         while self.kill_count < self.mob_kill_required:
             #Tools.tap(self.buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
@@ -168,21 +168,25 @@ class Sortie:
         self.watch_for_distraction(self.boss_coord, True)
         self.start_battle(True)
 
-    def watch_for_distraction(self, mob_coord, from_boss=False):
+    def watch_for_distraction(self, mob_coord, from_boss=False, from_cant_reach=False):
         tap_count = 0
         while True:
             if Tools.find('cant_reach'):
-                mob_coord = self.cant_reach_handler(mob_coord, from_boss)
+                mob_coord = (self.look_around('mobs', 2, blacklist=mob_coord) if from_cant_reach
+                            else self.cant_reach_handler(mob_coord, from_boss))
             if Tools.find('ambush'):
                 self.ambush_handler()
             if tap_count == 9:
-                mob_coord = self.look_around('boss', 1) if from_boss else self.filter_mob_coords(blacklist=mob_coord)
+                mob_coord = (self.look_around('boss', 1) if from_boss 
+                            else self.filter_mob_coords(blacklist=mob_coord))
                 if any(self.mob_coords.values()):
                     tap_count = 0
             if tap_count > 15:
                 self.mob_coords = self.look_around('mobs', 2, blacklist=mob_coord)
                 mob_coord = self.filter_mob_coords()
                 tap_count = 0
+            if not mob_coord:
+                mob_coord = self.look_around('mobs', 2) 
             if self.finish:
                 print('BOSS IS KILLED ABORT ABORT')
                 return
@@ -206,7 +210,7 @@ class Sortie:
             self.mob_coords = self.look_around('mobs', 2)
             self.boss_coord = Dimension(512, 360)
         mob_coord = self.filter_mob_coords(boss_coord=self.boss_coord)
-        self.watch_for_distraction(mob_coord)
+        self.watch_for_distraction(mob_coord, from_cant_reach=True)
         self.start_battle()
         self.kill_boss()
 
@@ -356,7 +360,7 @@ class Sortie:
         return None
 
     def is_deck_full(self):
-        return Tools.find('sort', 0.7)
+        return Tools.find('sort', 0.675)
 
     def refocus_fleet(self):
         self.switch_fleet()
