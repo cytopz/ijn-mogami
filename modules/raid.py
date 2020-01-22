@@ -23,4 +23,4 @@ class Raid:
             Tools.tap(Dimension(785, 621))
             Tools.tap(Dimension(785, 621))
             Tools.tap(self.buttons['confirm_battle'])
-            Tools.wait(3)
+            Tools.wait(5)
