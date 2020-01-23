@@ -7,7 +7,7 @@ class Raid:
             'ex': Dimension(922, 178),
             'hard': Dimension(922, 278),
             'normal': Dimension (922, 378),
-            'easy': Dimension (922, 278),
+            'easy': Dimension (922, 458),
             'go': Dimension(867, 566),
             'battle': Dimension(916, 584),
             'confirm_battle': Dimension(860, 600)
