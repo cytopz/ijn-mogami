@@ -1,67 +1,45 @@
-from utils.tools import Tools, Dimension, MapDetail
-from datetime import datetime
+from utils.tools import Tools, Dimension, MapDetail, Buttons
 
 class Sortie:
-    def __init__(self):
-        self.buttons = {
-            'battle_start': Dimension(910, 585),
-            'auto_battle': Dimension(692, 163),
-            'switch_fleet': Dimension(825, 685),
-            'evade': Dimension(872, 451),
-            'confirm_battle': Dimension(860, 600),
-            'strategy_panel': Dimension(865, 504),
-            'chapter_prev' : Dimension(43, 497),
-            'chapter_next' : Dimension(984, 425),
-            'go1': Dimension(759, 487),
-            'go2': Dimension(864, 554),
-            'confirm': Dimension(525, 486),
-            'sort': Dimension(357, 483),
-            'back': Dimension(50, 45),
-            'sort_by': Dimension(907, 28),
-            'time_joined': Dimension(657, 141),
-            'index_all': Dimension(280, 260),
-            'faction_all': Dimension(280, 365),
-            'rarity_all': Dimension(280, 473),
-            'rarity_common': Dimension(412, 473),
-            'rarity_rare': Dimension(538, 473),
-            'tobe_retired_ship': Dimension(130, 150),
-            'disassemble': Dimension(639, 529)
-            
-        }
-        self.sortie_map = '9-3'
-        self.mob_kill_required = MapDetail(self.sortie_map).kill_requirement
+    def __init__(self, sortie_map):
+        self.sortie_map = sortie_map
+        self.mob_kill_required = MapDetail[self.sortie_map]
         self.kill_count = 0
         self.switch_boss = True
         self.mob_fleet = 1
-        self.current_fleet = 1
-        self.needstorefocus = False
         self.mob_coords = {}
         self.boss_coord = None
         self.fleet_coord = None
         self.finish = False
         self.is_retire_filtered = False
-        self.start_time = datetime.now()
 
     def start(self):
+        if not Tools.find('battle_home'):
+            Tools.tap(Buttons['home'])
+        Tools.tap(Buttons['battle_home'])
+        Tools.wait(2)
         self.go_to_map()
         self.clear_mob()
         self.kill_boss()
+        self.kill_count = 0
+        self.is_retire_filtered = False
+        self.finish = False
 
     def go_to_map(self):
         if Tools.find('urgent', 0.725):
-            Tools.tap(self.buttons['confirm'])
+            Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
         if not map_loc:
             print('Map not found')
             self.go_to_chapter()
             map_loc = Tools.find(self.sortie_map)
         Tools.tap(map_loc)
-        Tools.tap(self.buttons['go1'])
+        Tools.tap(Buttons['go1'])
         if self.is_deck_full():
             self.retire_ship()
             Tools.tap(map_loc)
-            Tools.tap(self.buttons['go1'])
-        Tools.tap(self.buttons['go2'])
+            Tools.tap(Buttons['go1'])
+        Tools.tap(Buttons['go2'])
         print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         Tools.wait(7)
 
@@ -73,6 +51,7 @@ class Sortie:
             if Tools.find(f'{chapter}-1'):
                 current_chapter = chapter
                 break
+        Tools.delete_screen()
         if current_chapter != 0:
             print('Current chapter found : ', current_chapter)
             print('Target chapter : ', target_chapter)
@@ -80,23 +59,23 @@ class Sortie:
             for _ in range(0, abs(difference)):
                 if difference >= 1:
                     print('Selecting next chapter')
-                    Tools.tap(self.buttons['chapter_next'])
+                    Tools.tap(Buttons['chapter_next'])
                 else:
                     print('Selecting previous chapter')
-                    Tools.tap(self.buttons['chapter_prev'])
+                    Tools.tap(Buttons['chapter_prev'])
             print('Reached chapter ', target_chapter)
 
     def clear_mob(self):
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        Tools.swipe(Dimension(512, 384), Dimension(612, 384))
+        # Tools.swipe(Dimension(512, 384), Dimension(612, 384))
         while self.kill_count < self.mob_kill_required:
-            #Tools.tap(self.buttons['strategy_panel'])
+            #Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
                 return
             if Tools.find('urgent', 0.765):
-                Tools.tap(self.buttons['confirm'])
+                Tools.tap(Buttons['confirm'])
             self.fleet_coord = self.get_fleet_coord()
             self.mob_coords = self.find_mobs()
             if not self.mob_coords:
@@ -112,11 +91,11 @@ class Sortie:
             return
         # Battle preparation
         print('Battle started')
-        Tools.tap(self.buttons['battle_start'])
+        Tools.tap(Buttons['battle_start'])
         if self.is_deck_full():
             print('Interrupted, dock full')
             self.retire_ship()
-            Tools.tap(self.buttons['battle_start'])
+            Tools.tap(Buttons['battle_start'])
             print('Resuming battle')
         # Battle in progress     
         print('Battle in progress...')   
@@ -137,8 +116,8 @@ class Sortie:
             print('BOSS IS KILLED ABORT ABORT')
             return
         if Tools.find('urgent', 0.765):
-            Tools.tap(self.buttons['confirm'])
-        Tools.tap(self.buttons['strategy_panel'])
+            Tools.tap(Buttons['confirm'])
+        Tools.tap(Buttons['strategy_panel'])
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
@@ -157,7 +136,7 @@ class Sortie:
                     self.mob_coords = self.look_around('mob', 2)
                 mob_coord = self.filter_mob_coords()
                 self.watch_for_distraction(mob_coord)
-                Tools.tap(self.buttons['back'])
+                Tools.tap(Buttons['back'])
                 self.switch_fleet()
                 self.boss_coord = Tools.find('boss', sim)
                 is_overlap_mob_fleet = False
@@ -221,10 +200,10 @@ class Sortie:
         Tools.wait(3.5)
         if self.fail_evade():
             print('Failed to evade')
-            Tools.tap(self.buttons['battle_start'])
+            Tools.tap(Buttons['battle_start'])
             if self.is_deck_full():
                 self.retire_ship()
-                Tools.tap(self.buttons['battle_start'])
+                Tools.tap(Buttons['battle_start'])
             # Battle in progress        
             while not Tools.find('touch_to_continue'):
                 # Checking if manual control
@@ -242,18 +221,18 @@ class Sortie:
         if Tools.find('rare'):
             print('new BLUE bote dropped. locking...')
             Tools.tap(Dimension(785, 621))
-            Tools.tap(self.buttons['confirm'])
+            Tools.tap(Buttons['confirm'])
         elif Tools.find('elite'):
             print('PURPLE bote dropped')
             Tools.tap(Dimension(785, 621))
-            Tools.tap(self.buttons['confirm'])
+            Tools.tap(Buttons['confirm'])
         elif Tools.find('super_rare'):
             print('GOLDEN LEGENDARY bote dropped')
             Tools.tap(Dimension(785, 621))
-            Tools.tap(self.buttons['confirm'])
+            Tools.tap(Buttons['confirm'])
         Tools.wait(2)
         # Tap confirm
-        Tools.tap(self.buttons['confirm_battle'])  #confirm battle
+        Tools.tap(Buttons['confirm_battle'])  #confirm battle
         self.kill_count += 1
 
     def get_fleet_coord(self):
@@ -369,7 +348,7 @@ class Sortie:
         self.switch_fleet()
 
     def switch_fleet(self):
-        Tools.tap(self.buttons['switch_fleet'])
+        Tools.tap(Buttons['switch_fleet'])
 
     def enable_auto(self):
         print('Enabling auto combat')
@@ -377,7 +356,7 @@ class Sortie:
 
     def evade(self):
         print('Evading ambush')
-        Tools.tap(self.buttons['evade'])
+        Tools.tap(Buttons['evade'])
 
     def fail_evade(self):
         return Tools.find('battle_start')
@@ -393,23 +372,23 @@ class Sortie:
         return directions[direction]
 
     def filter_retire_ship(self):
-        Tools.tap(self.buttons['sort_by'], 1)
-        Tools.tap(self.buttons['time_joined'], 0.5)
-        Tools.tap(self.buttons['index_all'], 0.5)
-        Tools.tap(self.buttons['faction_all'], 0.5)
-        Tools.tap(self.buttons['rarity_all'], 0.5)
-        Tools.tap(self.buttons['rarity_common'], 0.5)
-        Tools.tap(self.buttons['rarity_rare'], 0.5)
+        Tools.tap(Buttons['sort_by'], 1)
+        Tools.tap(Buttons['time_joined'], 0.5)
+        Tools.tap(Buttons['index_all'], 0.5)
+        Tools.tap(Buttons['faction_all'], 0.5)
+        Tools.tap(Buttons['rarity_all'], 0.5)
+        Tools.tap(Buttons['rarity_common'], 0.5)
+        Tools.tap(Buttons['rarity_rare'], 0.5)
         Tools.tap(Dimension(639, 606))          # confirm button
         self.is_retire_filtered = True
 
     def retire_ship(self):
         print('Retiring ship...')
-        Tools.tap(self.buttons['sort'], 1.7)
+        Tools.tap(Buttons['sort'], 1.7)
         if not self.is_retire_filtered:
             self.filter_retire_ship()
         # Selecting one row botes
-        ship = self.buttons['tobe_retired_ship']
+        ship = Buttons['tobe_retired_ship']
         for _ in range(7):
             Tools.tap(ship, 0.5)
             ship.x += 130
@@ -418,14 +397,8 @@ class Sortie:
         # Tap to continue
         Tools.tap(Dimension(785, 621))
         Tools.tap(Dimension(765, 511))       # confirm3
-        Tools.tap(self.buttons['disassemble'])       # disassemble
+        Tools.tap(Buttons['disassemble'])       # disassemble
         # Tap to continue
         Tools.tap(Dimension(785, 621))
-        Tools.tap(self.buttons['back'])
+        Tools.tap(Buttons['back'])
         Tools.wait(7)
-
-    def get_time_elapse(self):
-        delta = datetime.now() - self.start_time
-        hours, remainder = divmod(delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f'{hours} hours {minutes} minutes {seconds} seconds'
