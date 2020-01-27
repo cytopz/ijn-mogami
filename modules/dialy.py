@@ -11,9 +11,6 @@ class Dialy:
         self.sortie_module = Sortie(self.hard_mode_map)
 
     def start(self):
-        if not Tools.find('battle_home'):
-            Tools.tap(Buttons['home'])
-        Tools.tap(Buttons['battle_home'])
         self.hard_mode()
         self.dialy_challenge()
 

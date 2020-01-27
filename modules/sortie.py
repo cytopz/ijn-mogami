@@ -14,10 +14,6 @@ class Sortie:
         self.is_retire_filtered = False
 
     def start(self):
-        if not Tools.find('battle_home'):
-            Tools.tap(Buttons['home'])
-        Tools.tap(Buttons['battle_home'])
-        Tools.wait(2)
         self.go_to_map()
         self.clear_mob()
         self.kill_boss()
@@ -48,7 +44,7 @@ class Sortie:
         current_chapter = 0
         print('Getting current chapter...')
         for chapter in range(1, 13):
-            if Tools.find(f'{chapter}-1'):
+            if Tools.find(f'{chapter}-1', sortie_map=True):
                 current_chapter = chapter
                 break
         Tools.delete_screen()
@@ -171,7 +167,7 @@ class Sortie:
             if not mob_coord:
                 self.mob_coords = self.look_around('mobs', 2) 
                 mob_coord = self.filter_mob_coords()
-            if Tools.find('battle_start'):
+            if not Tools.find('attack'):
                 print('Entering battle formation')
                 return
             print('Attacking ', mob_coord)

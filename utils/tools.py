@@ -58,7 +58,7 @@ class Dimension:
 
 class Tools:
 
-    DEBUG_MODE = True
+    DEBUG_MODE = False
 
     SIMILARITY_VALUE = 0.8
     CURRENT_SCREEN = np.array([[]])
@@ -72,8 +72,8 @@ class Tools:
         return img
 
     @classmethod
-    def find(self, template, similarity=SIMILARITY_VALUE, mob=False):
-        if '-' in template and not self.CURRENT_SCREEN.any():
+    def find(self, template, similarity=SIMILARITY_VALUE, mob=False, sortie_map=False):
+        if sortie_map and not self.CURRENT_SCREEN.any():
             self.CURRENT_SCREEN = self.update_screen()
         screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
         img_template = cv2.imread(f'assets/{template}.png', 0)

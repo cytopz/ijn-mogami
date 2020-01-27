@@ -24,6 +24,9 @@ class Main:
 
     def start(self):
         print('Starting....')
+        if not Tools.find('battle_home'):
+            Tools.tap(Buttons['home'])
+            Tools.wait(3)
         if self.sortie:
             self.sortie_module = Sortie(self.sortie)
             self.sortie_module.start()
