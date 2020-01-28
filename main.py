@@ -10,7 +10,7 @@ import sys
 from modules.sortie import Sortie
 from modules.dialy import Dialy
 from modules.raid import Raid
-from utils.tools import Tools
+from utils.tools import Tools, Buttons
 from utils.arg import args, parser
 
 class Main:
@@ -26,7 +26,6 @@ class Main:
         print('Starting....')
         if not Tools.find('battle_home'):
             Tools.tap(Buttons['home'])
-            Tools.wait(3)
         if self.sortie:
             self.sortie_module = Sortie(self.sortie)
             self.sortie_module.start()

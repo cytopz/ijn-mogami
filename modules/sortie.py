@@ -1,11 +1,12 @@
 from utils.tools import Tools, Dimension, MapDetail, Buttons
 
 class Sortie:
-    def __init__(self, sortie_map):
+    def __init__(self, sortie_map, hard_mode=False):
         self.sortie_map = sortie_map
+        self.hard_mode = hard_mode
         self.mob_kill_required = MapDetail[self.sortie_map]
         self.kill_count = 0
-        self.switch_boss = True
+        self.switch_boss = False
         self.mob_fleet = 1
         self.mob_coords = {}
         self.boss_coord = None
@@ -22,6 +23,10 @@ class Sortie:
         self.finish = False
 
     def go_to_map(self):
+        Tools.tap(Buttons['battle_home'])
+        Tools.wait(3)
+        if Tools.find('hard_mode'):
+            Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
@@ -38,6 +43,8 @@ class Sortie:
         Tools.tap(Buttons['go2'])
         print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         Tools.wait(7)
+        if Tools.find('fleet_lock'):
+            Tools.tap(Buttons['fleet_lock'], 0.5)
 
     def go_to_chapter(self):
         target_chapter = int(self.sortie_map.split('-')[0])
@@ -167,7 +174,7 @@ class Sortie:
             if not mob_coord:
                 self.mob_coords = self.look_around('mobs', 2) 
                 mob_coord = self.filter_mob_coords()
-            if not Tools.find('attack'):
+            if Tools.find('battle_start'): 
                 print('Entering battle formation')
                 return
             print('Attacking ', mob_coord)
@@ -369,12 +376,12 @@ class Sortie:
 
     def filter_retire_ship(self):
         Tools.tap(Buttons['sort_by'], 1)
-        Tools.tap(Buttons['time_joined'], 0.5)
-        Tools.tap(Buttons['index_all'], 0.5)
-        Tools.tap(Buttons['faction_all'], 0.5)
-        Tools.tap(Buttons['rarity_all'], 0.5)
-        Tools.tap(Buttons['rarity_common'], 0.5)
-        Tools.tap(Buttons['rarity_rare'], 0.5)
+        Tools.tap(Buttons['time_joined'], 0.35)
+        Tools.tap(Buttons['index_all'], 0.35)
+        Tools.tap(Buttons['faction_all'], 0.35)
+        Tools.tap(Buttons['rarity_all'], 0.35)
+        Tools.tap(Buttons['rarity_common'], 0.35)
+        Tools.tap(Buttons['rarity_rare'], 0.35)
         Tools.tap(Dimension(639, 606))          # confirm button
         self.is_retire_filtered = True
 
@@ -386,8 +393,9 @@ class Sortie:
         # Selecting one row botes
         ship = Buttons['tobe_retired_ship']
         for _ in range(7):
-            Tools.tap(ship, 0.5)
+            Tools.tap(ship, 0.35)
             ship.x += 130
+        Tools.wait(0.1)
         Tools.tap(Dimension(867, 683))       # confirm1
         Tools.tap(Dimension(808, 598))       # confirm2
         # Tap to continue

@@ -176,6 +176,7 @@ Buttons = {
     'home': Dimension(999, 30),
     'battle_home': Dimension(871, 372),
     'hard_mode': Dimension(69, 696),
+    'fleet_lock': Dimension(974, 550),
     'dialy': Dimension(661, 682),
     'dialy_70': Dimension(480, 250),
     'dialy_50': Dimension(480, 350),
