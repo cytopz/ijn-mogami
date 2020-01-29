@@ -31,6 +31,7 @@ class Main:
             self.sortie_module.start()
         elif self.dialy:
             self.dialy_module.start()
+            sys.exit(1)
 
     def print_time_elapsed(self):
         print(f'Done. Finished in {Tools.time_elapsed(Tools.time_now(), self.time_start)}')

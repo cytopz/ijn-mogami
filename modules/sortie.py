@@ -1,9 +1,9 @@
 from utils.tools import Tools, Dimension, MapDetail, Buttons
 
 class Sortie:
-    def __init__(self, sortie_map, hard_mode=False):
+    def __init__(self, sortie_map, clear_mode=False):
         self.sortie_map = sortie_map
-        self.hard_mode = hard_mode
+        self.clear_mode = clear_mode
         self.mob_kill_required = MapDetail[self.sortie_map]
         self.kill_count = 0
         self.switch_boss = False
@@ -69,6 +69,8 @@ class Sortie:
             print('Reached chapter ', target_chapter)
 
     def clear_mob(self):
+        if self.clear_mode:
+            return
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually

@@ -8,7 +8,7 @@ class Dialy:
         self.escort_dialy_mode = 'fire'
         self.today = Tools.time_now().strftime('%a').lower()
         self.chip_mission = False
-        self.sortie_module = Sortie(self.hard_mode_map)
+        self.sortie_module = Sortie(self.hard_mode_map, True)
 
     def start(self):
         self.hard_mode()
@@ -17,7 +17,7 @@ class Dialy:
     def hard_mode(self):
         if Tools.find('hard_mode'):
             Tools.tap(Buttons['hard_mode'])
-        for _ in range(0):
+        for _ in range(1):
             self.sortie_module.start()
 
     def dialy_challenge(self):
@@ -44,6 +44,8 @@ class Dialy:
                 if not switched_fleet:
                     for _ in range(5):
                         Tools.tap(Dimension(730, 360), 0.13)
+                    switched_fleet = True
                 self.sortie_module.start_battle()
             Tools.tap(Buttons['back'])
         Tools.tap(Buttons['home'])
+
