@@ -136,12 +136,19 @@ class Sortie:
                 print('Boss might be overlapped with mob fleet. Checking...')
                 self.switch_fleet()
                 fleet_coord = self.get_fleet_coord()
-                self.mob_coords = self.find_mobs()
-                if not self.mob_coords:
-                    self.mob_coords = self.look_around('mob', 2)
-                mob_coord = self.filter_mob_coords()
-                self.watch_for_distraction(mob_coord)
-                Tools.tap(Buttons['back'])
+                if not self.clear_mode:
+                    self.mob_coords = self.find_mobs()
+                    if not self.mob_coords:
+                        self.mob_coords = self.look_around('mob', 2)
+                    mob_coord = self.filter_mob_coords()
+                    self.watch_for_distraction(mob_coord)
+                    Tools.tap(Buttons['back'])
+                else:
+                    while not self.boss_coord:
+                        for direction in ['right', 'down', 'left']:
+                            self.boss_coord = self.move_one_tile(fleet_coord, direction)
+                            if self.boss_coord:
+                                break
                 self.switch_fleet()
                 self.boss_coord = Tools.find('boss', sim)
                 is_overlap_mob_fleet = False
