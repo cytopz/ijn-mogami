@@ -17,7 +17,7 @@ class Dialy:
     def hard_mode(self):
         if Tools.find('hard_mode'):
             Tools.tap(Buttons['hard_mode'])
-        for _ in range(2):
+        for _ in range(3):
             self.sortie_module.start()
 
     def dialy_challenge(self):
