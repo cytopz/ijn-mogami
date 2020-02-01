@@ -15,19 +15,21 @@ from utils.arg import args, parser
 
 class Main:
     def __init__(self):
-        self.sortie_module = None
+        self.dialy = args.dialy
+        self.sortie_map = args.sortie
+        self.sortie_module = Sortie(self.sortie_map)
         self.raid_module = Raid('hard')
         self.dialy_module = Dialy()
         self.time_start = Tools.time_now()
-        self.dialy = args.dialy
-        self.sortie = args.sortie
+        self.go_home()
 
-    def start(self):
-        print('Starting....')
+    def go_home(self):
+        print('Starting...')
         if not Tools.find('battle_home'):
             Tools.tap(Buttons['home'])
-        if self.sortie:
-            self.sortie_module = Sortie(self.sortie)
+
+    def start(self):
+        if self.sortie_map:
             self.sortie_module.start()
         elif self.dialy:
             self.dialy_module.start()
@@ -41,11 +43,11 @@ if __name__ == '__main__':
     if not (args.dialy or args.sortie):
         parser.error('no argument specified')
     try:
+        mogami = Main()
         while True:
-            mogami = Main()
             mogami.start()
             mogami.print_time_elapsed()
-            Tools.wait(3)
+            Tools.wait(5)
     except KeyboardInterrupt:
             print('\nExiting...')
             mogami.print_time_elapsed()
