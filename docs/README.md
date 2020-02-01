@@ -6,11 +6,12 @@
 
 ## Installation
 
-install dependencies with `pip`
+clone this repo, then install dependencies with `pip`
 
 ```{bash}
 $ pip install -r requirements.txt
 ```
+run `main.py`
 
 ## Usage
 
