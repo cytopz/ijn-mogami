@@ -29,7 +29,7 @@ class Sortie:
         if Tools.find('hard_mode') and self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
         if not Tools.find('hard_mode'):
-            Tools.tapi(Buttons['hard_mode'])
+            Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
