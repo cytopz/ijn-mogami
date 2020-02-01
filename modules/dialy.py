@@ -4,11 +4,12 @@ from modules.sortie import Sortie
 class Dialy:
     def __init__(self):
         self.hard_mode_map = '9-3'
+        self.clear_mode = True
         self.dialy_level = '70'
         self.escort_dialy_mode = 'fire'
         self.today = Tools.time_now().strftime('%a').lower()
         self.chip_mission = False
-        self.sortie_module = Sortie(self.hard_mode_map, True)
+        self.sortie_module = Sortie(self.hard_mode_map, True, self.clear_mode)
 
     def start(self):
         self.hard_mode()

@@ -1,9 +1,10 @@
 from utils.tools import Tools, Dimension, MapDetail, Buttons
 
 class Sortie:
-    def __init__(self, sortie_map, clear_mode=False):
+    def __init__(self, sortie_map, hard_mode=False, clear_mode=False):
         self.sortie_map = sortie_map
         self.clear_mode = clear_mode
+        self.hard_mode = hard_mode
         self.mob_kill_required = MapDetail[self.sortie_map]
         self.kill_count = 0
         self.switch_boss = False
@@ -25,7 +26,7 @@ class Sortie:
     def go_to_map(self):
         Tools.tap(Buttons['battle_home'])
         Tools.wait(3)
-        if Tools.find('hard_mode'):
+        if Tools.find('hard_mode') and self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
