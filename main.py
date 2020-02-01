@@ -31,6 +31,7 @@ class Main:
             self.sortie_module.start()
         elif self.dialy:
             self.dialy_module.start()
+            self.print_time_elapsed()
             sys.exit(1)
 
     def print_time_elapsed(self):
