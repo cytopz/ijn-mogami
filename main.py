@@ -17,7 +17,7 @@ class Main:
     def __init__(self):
         self.dialy = args.dialy
         self.sortie_map = args.sortie
-        self.sortie_module = Sortie(self.sortie_map)
+        self.sortie_module = None
         self.raid_module = Raid('hard')
         self.dialy_module = Dialy()
         self.time_start = Tools.time_now()
@@ -30,6 +30,7 @@ class Main:
 
     def start(self):
         if self.sortie_map:
+            self.sortie_module = Sortie(self.sortie_map)
             self.sortie_module.start()
         elif self.dialy:
             self.dialy_module.start()

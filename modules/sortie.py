@@ -28,7 +28,7 @@ class Sortie:
         Tools.wait(3)
         if Tools.find('hard_mode') and self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
-        if not Tools.find('hard_mode'):
+        elif not Tools.find('hard_mode') and not self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
@@ -79,7 +79,7 @@ class Sortie:
         # to center the view, adjust the values manually
         # Tools.swipe(Dimension(512, 384), Dimension(612, 384))
         while self.kill_count < self.mob_kill_required:
-            #Tools.tap(Buttons['strategy_panel'])
+            # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
                 return
             if Tools.find('urgent', 0.765):
@@ -125,7 +125,7 @@ class Sortie:
             return
         if Tools.find('urgent', 0.765):
             Tools.tap(Buttons['confirm'])
-        Tools.tap(Buttons['strategy_panel'])
+        # Tools.tap(Buttons['strategy_panel'])
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
@@ -245,7 +245,7 @@ class Sortie:
             print('GOLDEN LEGENDARY bote dropped')
             Tools.tap(Dimension(785, 621))
             Tools.tap(Buttons['confirm'])
-        Tools.wait(2)
+        Tools.wait(3)
         # Tap confirm
         Tools.tap(Buttons['confirm_battle'])  #confirm battle
         self.kill_count += 1
