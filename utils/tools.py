@@ -2,6 +2,7 @@ import time
 import subprocess
 import cv2
 import numpy as np
+from datetime import datetime
 from scipy import spatial
 from utils.adb import Adb
 
@@ -71,8 +72,10 @@ class Tools:
         return img
 
     @classmethod
-    def find(self, template, similarity=SIMILARITY_VALUE, mob=False):
-        screen = self.update_screen()
+    def find(self, template, similarity=SIMILARITY_VALUE, mob=False, sortie_map=False):
+        if sortie_map and not self.CURRENT_SCREEN.any():
+            self.CURRENT_SCREEN = self.update_screen()
+        screen = self.CURRENT_SCREEN if self.CURRENT_SCREEN.any() else self.update_screen()
         img_template = cv2.imread(f'assets/{template}.png', 0)
         match = cv2.matchTemplate(screen, img_template, cv2.TM_CCOEFF_NORMED)
         value, location = cv2.minMaxLoc(match)[1], cv2.minMaxLoc(match)[3]
@@ -132,78 +135,121 @@ class Tools:
     @classmethod
     def wait(self, duration):
         time.sleep(duration)
+    
+    @classmethod
+    def time_now(self):
+        return datetime.now()
+
+    @classmethod
+    def time_elapsed(self, end, start):
+        hours, remainder = divmod((end-start).seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f'{hours} hours, {minutes} minutes, and {seconds} seconds'
 
     @classmethod
     def delete_screen(self):
         self.CURRENT_SCREEN = np.array([[]])
 
-class MapDetail:
-    def __init__(self, sortie_map):
-        self.battle_requirement = {
-            # Chapter 1
-            '1-1': 1,
-            '1-2': 2,
-            '1-3': 2,
-            '1-4': 3,
-            # Chapter 2
-            '2-1': 2,
-            '2-2': 3,
-            '2-3': 3,
-            '2-4': 3,
-            # Chapter 3
-            '3-1': 3,
-            '3-2': 3,
-            '3-3': 3,
-            '3-4': 3,
-            # Chapter 4
-            '4-1': 3,
-            '4-2': 3,
-            '4-3': 3,
-            '4-4': 4,
-            # Chapter 5
-            '5-1': 4,
-            '5-2': 4,
-            '5-3': 4,
-            '5-4': 4,
-            # Chapter 6
-            '6-1': 4,
-            '6-2': 4,
-            '6-3': 4,
-            '6-4': 5,
-            # Chapter 7
-            '7-1': 5,
-            '7-2': 5,
-            '7-3': 5,
-            '7-4': 5,
-            # Chapter 8
-            '8-1': 4,
-            '8-2': 4,
-            '8-3': 4,
-            '8-4': 5,
-            # Chapter 9
-            '9-1': 5,
-            '9-2': 5,
-            '9-3': 5,
-            '9-4': 5,
-            # Chapter 10
-            '10-1': 6,
-            '10-2': 6,
-            '10-3': 6,
-            '10-4': 6,
-            # Chapter 11
-            '11-1': 6,
-            '11-2': 6,
-            '11-3': 6,
-            '11-4': 6,
-            # Chapter 12
-            '12-1': 6,
-            '12-2': 6,
-            '12-3': 6,
-            '12-4': 6,
-            # Chapter 13
-            '13-1': 6,
-            '13-2': 6,
-            '13-3': 6,
-            '13-4': 7
-        }
-        self.kill_requirement = self.battle_requirement[sortie_map]
+Buttons = {
+    'battle_start': Dimension(910, 585),
+    'auto_battle': Dimension(692, 163),
+    'switch_fleet': Dimension(825, 685),
+    'evade': Dimension(872, 451),
+    'confirm_battle': Dimension(860, 600),
+    'strategy_panel': Dimension(865, 504),
+    'chapter_prev' : Dimension(43, 497),
+    'chapter_next' : Dimension(984, 425),
+    'go1': Dimension(759, 487),
+    'go2': Dimension(864, 554),
+    'confirm': Dimension(525, 486),
+    'sort': Dimension(357, 483),
+    'back': Dimension(50, 45),
+    'sort_by': Dimension(907, 28),
+    'time_joined': Dimension(657, 141),
+    'index_all': Dimension(280, 260),
+    'faction_all': Dimension(280, 365),
+    'rarity_all': Dimension(280, 473),
+    'rarity_common': Dimension(412, 473),
+    'rarity_rare': Dimension(538, 473),
+    'tobe_retired_ship': Dimension(130, 150),
+    'disassemble': Dimension(639, 529),
+    'home': Dimension(999, 30),
+    'battle_home': Dimension(871, 372),
+    'hard_mode': Dimension(69, 696),
+    'fleet_lock': Dimension(974, 550),
+    'dialy': Dimension(661, 682),
+    'dialy_70': Dimension(480, 250),
+    'dialy_50': Dimension(480, 350),
+    'dialy_70_fire': Dimension(480, 250),
+    'dialy_70_air': Dimension(480, 350),
+    'dialy_50_fire': Dimension(480, 450),
+    'dialy_50_air': Dimension(480, 575)
+}
+
+MapDetail = {
+    # Chapter 1
+    '1-1': 1,
+    '1-2': 2,
+    '1-3': 2,
+    '1-4': 3,
+    # Chapter 2
+    '2-1': 2,
+    '2-2': 3,
+    '2-3': 3,
+    '2-4': 3,
+    # Chapter 3
+    '3-1': 3,
+    '3-2': 3,
+    '3-3': 3,
+    '3-4': 3,
+    # Chapter 4
+    '4-1': 3,
+    '4-2': 3,
+    '4-3': 3,
+    '4-4': 4,
+    # Chapter 5
+    '5-1': 4,
+    '5-2': 4,
+    '5-3': 4,
+    '5-4': 4,
+    # Chapter 6
+    '6-1': 4,
+    '6-2': 4,
+    '6-3': 4,
+    '6-4': 5,
+    # Chapter 7
+    '7-1': 5,
+    '7-2': 5,
+    '7-3': 5,
+    '7-4': 5,
+    # Chapter 8
+    '8-1': 4,
+    '8-2': 4,
+    '8-3': 4,
+    '8-4': 5,
+    # Chapter 9
+    '9-1': 5,
+    '9-2': 5,
+    '9-3': 5,
+    '9-4': 5,
+    # Chapter 10
+    '10-1': 6,
+    '10-2': 6,
+    '10-3': 6,
+    '10-4': 6,
+    # Chapter 11
+    '11-1': 6,
+    '11-2': 6,
+    '11-3': 6,
+    '11-4': 6,
+    # Chapter 12
+    '12-1': 6,
+    '12-2': 6,
+    '12-3': 6,
+    '12-4': 6,
+    # Chapter 13
+    '13-1': 6,
+    '13-2': 6,
+    '13-3': 6,
+    '13-4': 7
+}

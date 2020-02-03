@@ -6,18 +6,24 @@
 
 ## Installation
 
-install dependencies with `pip`
+clone this repo, then install dependencies with `pip`
 
 ```{bash}
 $ pip install -r requirements.txt
 ```
+run `main.py`
 
 ## Usage
 
-run `main.py`
-
 ```{bash}
-$ ./main.py
+usage: mogami [-h] [-d] [-s SORTIE_MAP]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+required arguments:
+  -d, --dialy
+  -s SORTIE_MAP, --sortie SORTIE_MAP
 ```
 
 ## License
