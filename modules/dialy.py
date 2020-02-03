@@ -49,4 +49,3 @@ class Dialy:
                 self.sortie_module.start_battle()
             Tools.tap(Buttons['back'])
         Tools.tap(Buttons['home'])
-

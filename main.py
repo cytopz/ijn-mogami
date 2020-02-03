@@ -53,4 +53,3 @@ if __name__ == '__main__':
             print('\nExiting...')
             mogami.print_time_elapsed()
             sys.exit(0)
-
