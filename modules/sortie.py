@@ -7,7 +7,7 @@ class Sortie:
         self.hard_mode = hard_mode
         self.mob_kill_required = MapDetail[self.sortie_map]
         self.kill_count = 0
-        self.switch_boss = False
+        self.switch_boss = True
         self.mob_fleet = 1
         self.mob_coords = {}
         self.boss_coord = None
@@ -77,7 +77,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        # Tools.swipe(Dimension(512, 384), Dimension(612, 384))
+        # Tools.swipe(Dimension(512, 384), Dimension(512, 512))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
@@ -356,7 +356,7 @@ class Sortie:
         return None
 
     def is_deck_full(self):
-        return Tools.find('sort', 0.675)
+        return Tools.find('sort')
 
     def refocus_fleet(self):
         self.switch_fleet()
