@@ -24,19 +24,12 @@ class Sortie:
         self.finish = False
 
     def go_to_map(self):
-        Tools.tap(Buttons['battle_home'])
+        Tools.tap(Buttons['idol_operation'])
         Tools.wait(3)
-        if Tools.find('hard_mode') and self.hard_mode:
-            Tools.tap(Buttons['hard_mode'])
-        elif not Tools.find('hard_mode') and not self.hard_mode:
-            Tools.tap(Buttons['hard_mode'])
-        if Tools.find('urgent', 0.725):
-            Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
         if not map_loc:
             print('Map not found')
-            self.go_to_chapter()
-            map_loc = Tools.find(self.sortie_map)
+            exit()
         Tools.tap(map_loc)
         Tools.tap(Buttons['go1'])
         if self.is_deck_full():
@@ -77,7 +70,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        # Tools.swipe(Dimension(512, 384), Dimension(512, 512))
+        Tools.swipe(Dimension(512, 384), Dimension(872, 712))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
@@ -268,6 +261,7 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
+            'idol': [],
             'large': [],
             'medium': [],
             'small': [],
@@ -282,7 +276,16 @@ class Sortie:
                     sim_min = 0.85
                 if key == 'medium':
                     sim_min = 0.75
-                coords = Tools.find_multi('mob_'+key, sim, True)
+                if key == 'idol':
+                    if len(mob_coords[key]) != 0:
+                        break
+                    if self.kill_count >= 3:
+                        break
+                    sim_min = 0.575
+                    for i in range(1, 5):
+                        coords += Tools.find_multi('idol'+str(i), sim, True, True)
+                else:
+                    coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
                     break
                 if coords:

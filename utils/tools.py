@@ -183,7 +183,8 @@ Buttons = {
     'dialy_70_fire': Dimension(480, 250),
     'dialy_70_air': Dimension(480, 350),
     'dialy_50_fire': Dimension(480, 450),
-    'dialy_50_air': Dimension(480, 575)
+    'dialy_50_air': Dimension(480, 575),
+    'idol_operation': Dimension(505, 310)
 }
 
 MapDetail = {
@@ -251,5 +252,7 @@ MapDetail = {
     '13-1': 6,
     '13-2': 6,
     '13-3': 6,
-    '13-4': 7
+    '13-4': 7,
+    # Idolshit
+    'sp5': 6
 }
