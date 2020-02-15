@@ -16,15 +16,17 @@ class Sortie:
         self.is_retire_filtered = False
 
     def start(self):
-        self.go_to_map()
-        self.clear_mob()
-        self.kill_boss()
-        self.kill_count = 0
-        self.is_retire_filtered = False
-        self.finish = False
+        while True:
+            self.go_to_map()
+            self.clear_mob()
+            self.kill_boss()
+            self.kill_count = 0
+            self.is_retire_filtered = False
+            self.finish = False
 
     def go_to_map(self):
-        Tools.tap(Buttons['idol_operation'])
+        if Tools.find('battle_home'):
+            Tools.tap(Buttons['idol_operation'])
         Tools.wait(3)
         map_loc = Tools.find(self.sortie_map)
         if not map_loc:
@@ -70,7 +72,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        Tools.swipe(Dimension(512, 384), Dimension(872, 712))
+        Tools.swipe(Dimension(512, 384), Dimension(844, 575))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
@@ -391,12 +393,12 @@ class Sortie:
 
     def filter_retire_ship(self):
         Tools.tap(Buttons['sort_by'], 1)
-        Tools.tap(Buttons['time_joined'], 0.35)
-        Tools.tap(Buttons['index_all'], 0.35)
-        Tools.tap(Buttons['faction_all'], 0.35)
-        Tools.tap(Buttons['rarity_all'], 0.35)
-        Tools.tap(Buttons['rarity_common'], 0.35)
-        Tools.tap(Buttons['rarity_rare'], 0.35)
+        Tools.tap(Buttons['time_joined'], 0.15)
+        Tools.tap(Buttons['index_all'], 0.15)
+        Tools.tap(Buttons['faction_all'], 0.15)
+        Tools.tap(Buttons['rarity_all'], 0.15)
+        Tools.tap(Buttons['rarity_common'], 0.15)
+        Tools.tap(Buttons['rarity_rare'], 0.15)
         Tools.tap(Dimension(639, 606))          # confirm button
         self.is_retire_filtered = True
 
@@ -408,7 +410,7 @@ class Sortie:
         # Selecting one row botes
         ship = Buttons['tobe_retired_ship']
         for _ in range(7):
-            Tools.tap(ship, 0.35)
+            Tools.tap(ship, 0.05)
             ship.x += 130
         Tools.wait(0.1)
         Tools.tap(Dimension(867, 683))       # confirm1

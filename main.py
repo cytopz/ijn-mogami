@@ -45,10 +45,9 @@ if __name__ == '__main__':
         parser.error('no argument specified')
     try:
         mogami = Main()
-        while True:
-            mogami.start()
-            mogami.print_time_elapsed()
-            Tools.wait(5)
+        mogami.start()
+        mogami.print_time_elapsed()
+        Tools.wait(5)
     except KeyboardInterrupt:
             print('\nExiting...')
             mogami.print_time_elapsed()
