@@ -413,7 +413,6 @@ class Sortie:
         ship = Dimension(130, 150)
         for _ in range(7):
             Tools.tap(ship, 0.05)
-            print(ship)
             ship.x += 130
         Tools.wait(0.5)
         Tools.tap(Dimension(867, 683))       # confirm1
