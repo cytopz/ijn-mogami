@@ -171,7 +171,6 @@ Buttons = {
     'rarity_all': Dimension(280, 473),
     'rarity_common': Dimension(412, 473),
     'rarity_rare': Dimension(538, 473),
-    'tobe_retired_ship': Dimension(130, 150),
     'disassemble': Dimension(639, 529),
     'home': Dimension(999, 30),
     'battle_home': Dimension(871, 372),
