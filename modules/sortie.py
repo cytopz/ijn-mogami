@@ -43,7 +43,7 @@ class Sortie:
         Tools.tap(Buttons['go2'])
         print(f'Map {self.sortie_map}, {self.mob_kill_required} mob required to kill')
         Tools.wait(7)
-        if Tools.find('fleet_lock'):
+        if not Tools.find('fleet_lock'):
             Tools.tap(Buttons['fleet_lock'], 0.5)
 
     def go_to_chapter(self):
@@ -88,19 +88,20 @@ class Sortie:
                 self.mob_coords = self.look_around('mobs', 2)
             mob_coord = self.filter_mob_coords()
             self.watch_for_distraction(mob_coord)
-            self.start_battle()
+            self.start_battle(mob_coord)
 
-    def start_battle(self, is_boss=False):
+    def start_battle(self, mob_coord=None, is_boss=False):
         if self.finish:
             print('BOSS IS KILLED ABORT ABORT')
             return
         # Battle preparation
         print('Battle started')
-        Tools.tap(Buttons['battle_start'])
+        # Tools.tap(Buttons['battle_start'])
         if self.is_deck_full():
             print('Interrupted, dock full')
             self.retire_ship()
-            Tools.tap(Buttons['battle_start'])
+            # Tools.tap(Buttons['battle_start'])
+            Tools.tap(mob_coord if not is_boss else self.boss_coord)
             print('Resuming battle')
         # Battle in progress     
         print('Battle in progress...')   
@@ -168,6 +169,10 @@ class Sortie:
                 mob_coord = self.cant_reach_handler(mob_coord, from_boss)
             if Tools.find('ambush'):
                 self.ambush_handler()
+            if self.is_deck_full():
+                print('Interrupted, dock full')
+                self.retire_ship()
+                Tools.tap(mob_coord)
             if tap_count == 9:
                 mob_coord = (self.look_around('boss', 1) if from_boss 
                             else self.filter_mob_coords(blacklist=mob_coord))
@@ -183,8 +188,8 @@ class Sortie:
             if not mob_coord:
                 self.mob_coords = self.look_around('mobs', 2) 
                 mob_coord = self.filter_mob_coords()
-            if Tools.find('battle_start'): 
-                print('Entering battle formation')
+            if not Tools.find('attack'): 
+                print('Entering battle')
                 return
             print('Attacking ', mob_coord)
             Tools.tap(mob_coord)
@@ -285,7 +290,7 @@ class Sortie:
                         break
                     if self.kill_count >= 3:
                         break
-                    sim_min = 0.575
+                    sim_min = 0.6
                     for i in range(1, 5):
                         coords += Tools.find_multi('idol'+str(i), sim, True, True)
                 else:
