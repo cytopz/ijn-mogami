@@ -403,7 +403,7 @@ class Sortie:
         if not self.is_retire_filtered:
             self.filter_retire_ship()
         # Selecting one row botes
-        ship = Buttons['tobe_retired_ship']
+        ship = Dimension(130, 145)
         for _ in range(7):
             Tools.tap(ship, 0.35)
             ship.x += 130
