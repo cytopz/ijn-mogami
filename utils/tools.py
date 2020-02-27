@@ -165,7 +165,7 @@ Buttons = {
     'sort': Dimension(357, 483),
     'back': Dimension(50, 45),
     'sort_by': Dimension(907, 28),
-    'time_joined': Dimension(657, 141),
+    'time_joined': Dimension(657, 171),
     'index_all': Dimension(280, 220),
     'faction_all': Dimension(280, 335),
     'rarity_all': Dimension(280, 445),
