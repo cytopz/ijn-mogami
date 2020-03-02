@@ -71,7 +71,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        Tools.swipe(Dimension(512, 384), Dimension(1062, 435))
+        # Tools.swipe(Dimension(512, 384), Dimension(818, 585))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):
@@ -288,7 +288,7 @@ class Sortie:
                     if self.kill_count >= 3:
                         break
                     sim_min = 0.6
-                    for i in range(1, 6):
+                    for i in range(1, 5):
                         coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
                     coords = Tools.find_multi('mob_'+key, sim, True)

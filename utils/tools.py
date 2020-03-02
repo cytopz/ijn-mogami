@@ -165,12 +165,12 @@ Buttons = {
     'sort': Dimension(357, 483),
     'back': Dimension(50, 45),
     'sort_by': Dimension(907, 28),
-    'time_joined': Dimension(657, 141),
-    'index_all': Dimension(280, 260),
-    'faction_all': Dimension(280, 365),
-    'rarity_all': Dimension(280, 473),
-    'rarity_common': Dimension(412, 473),
-    'rarity_rare': Dimension(538, 473),
+    'time_joined': Dimension(657, 171),
+    'index_all': Dimension(280, 220),
+    'faction_all': Dimension(280, 335),
+    'rarity_all': Dimension(280, 445),
+    'rarity_common': Dimension(412, 445),
+    'rarity_rare': Dimension(538, 445),
     'disassemble': Dimension(639, 529),
     'home': Dimension(999, 30),
     'battle_home': Dimension(871, 372),
@@ -182,8 +182,7 @@ Buttons = {
     'dialy_70_fire': Dimension(480, 250),
     'dialy_70_air': Dimension(480, 350),
     'dialy_50_fire': Dimension(480, 450),
-    'dialy_50_air': Dimension(480, 575),
-    'idol_operation': Dimension(505, 310)
+    'dialy_50_air': Dimension(480, 575)
 }
 
 MapDetail = {
