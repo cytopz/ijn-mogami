@@ -21,7 +21,6 @@ class Main:
         self.raid_module = Raid('hard')
         self.dialy_module = Dialy()
         self.time_start = Tools.time_now()
-        self.go_home()
 
     def go_home(self):
         print('Starting...')

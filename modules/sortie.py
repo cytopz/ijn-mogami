@@ -25,9 +25,6 @@ class Sortie:
             self.finish = False
 
     def go_to_map(self):
-        if Tools.find('battle_home'):
-            Tools.tap(Buttons['idol_operation'])
-        Tools.wait(3)
         if Tools.find('urgent', 0.765):
             Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map)
@@ -270,7 +267,7 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
-            'idol': [],
+            'siren': [],
             'large': [],
             'medium': [],
             'small': [],
@@ -285,14 +282,14 @@ class Sortie:
                     sim_min = 0.85
                 if key == 'medium':
                     sim_min = 0.75
-                if key == 'idol':
+                if key == 'siren':
                     if len(mob_coords[key]) != 0:
                         break
                     if self.kill_count >= 3:
                         break
                     sim_min = 0.6
-                    for i in range(1, 5):
-                        coords += Tools.find_multi('idol'+str(i), sim, True, True)
+                    for i in range(1, 6):
+                        coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
                     coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
