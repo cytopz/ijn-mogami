@@ -287,7 +287,7 @@ class Sortie:
                         break
                     if self.kill_count >= 3:
                         break
-                    sim_min = 0.6
+                    sim_min = 0.65
                     for i in range(1, 5):
                         coords += Tools.find_multi('siren'+str(i), sim, True, True)
                 else:
