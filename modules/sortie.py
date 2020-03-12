@@ -1,11 +1,11 @@
 from utils.tools import Tools, Dimension, MapDetail, Buttons
 
 class Sortie:
-    def __init__(self, sortie_map, hard_mode=False, clear_mode=False):
+    def __init__(self, sortie_map=None, hard_mode=False, clear_mode=False, kill_req=None):
         self.sortie_map = sortie_map
         self.clear_mode = clear_mode
         self.hard_mode = hard_mode
-        self.mob_kill_required = MapDetail[self.sortie_map]
+        self.mob_kill_required = MapDetail[self.sortie_map] if not kill_req else kill_req
         self.kill_count = 0
         self.switch_boss = True
         self.mob_fleet = 1
@@ -16,7 +16,8 @@ class Sortie:
         self.is_retire_filtered = False
 
     def start(self):
-        self.go_to_map()
+        if self.sortie_map:
+            self.go_to_map()
         self.clear_mob()
         self.kill_boss()
         self.kill_count = 0
