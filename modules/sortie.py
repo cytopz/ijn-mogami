@@ -1,4 +1,4 @@
-from utils.tools import Tools, Dimension, MapDetail, Buttons
+from utils.tools import Tools, Dimension, MapDetail, Buttons, Map
 
 class Sortie:
     def __init__(self, sortie_map=None, hard_mode=False, clear_mode=False, kill_req=None):
@@ -33,7 +33,7 @@ class Sortie:
             Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
-        map_loc = Tools.find(self.sortie_map)
+        map_loc = Tools.find(self.sortie_map) if not any(char.isalpha() for char in self.sortie_map) else Map[self.sortie_map]
         if not map_loc:
             print('Map not found')
             self.go_to_chapter()
