@@ -250,7 +250,7 @@ MapDetail = {
     '13-1': 6,
     '13-2': 6,
     '13-3': 6,
-    '13-4': 7
+    '13-4': 7,
     # EVENT ONLY
     # CURRENT EVENT : RYUUJOU
     'sp1': 4,
