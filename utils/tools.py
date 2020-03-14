@@ -262,5 +262,5 @@ MapDetail = {
 Map = {
     'sp1': Dimension(325, 325),
     'sp2': Dimension(396, 533),
-    'sp3': Dimension(396, 533),
+    'sp3': Dimension(740, 420),
 }

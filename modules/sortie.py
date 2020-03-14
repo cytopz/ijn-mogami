@@ -14,6 +14,7 @@ class Sortie:
         self.fleet_coord = None
         self.finish = False
         self.is_retire_filtered = False
+        self.is_event = False if not sortie_map else any(chr.isalpha() for chr in self.sortie_map)
 
     def start(self):
         if self.sortie_map:
@@ -25,15 +26,16 @@ class Sortie:
         self.finish = False
 
     def go_to_map(self):
-        Tools.tap(Buttons['battle_home'])
-        Tools.wait(3)
+        if not self.is_event:
+            Tools.tap(Buttons['battle_home'])
+            Tools.wait(3)
         if Tools.find('hard_mode') and self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
         elif not Tools.find('hard_mode') and not self.hard_mode:
             Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
-        map_loc = Tools.find(self.sortie_map) if not any(char.isalpha() for char in self.sortie_map) else Map[self.sortie_map]
+        map_loc = Tools.find(self.sortie_map) if not self.is_event else Map[self.sortie_map]
         if not map_loc:
             print('Map not found')
             self.go_to_chapter()
@@ -78,7 +80,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        # Tools.swipe(Dimension(512, 384), Dimension(512, 512))
+        Tools.swipe(Dimension(512, 384), Dimension(852, 512))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
             if Tools.find('boss', 0.9):

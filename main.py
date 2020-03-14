@@ -22,7 +22,10 @@ class Main:
         self.raid_module = Raid('hard')
         self.dialy_module = Dialy()
         self.time_start = Tools.time_now()
-        if not self.manual:
+        try:
+            if not (self.manual or any(chr.isalpha() for chr in self.sortie_map)):
+                self.go_home()
+        except TypeError:
             self.go_home()
 
     def go_home(self):
@@ -59,6 +62,6 @@ if __name__ == '__main__':
             mogami.print_time_elapsed()
             Tools.wait(5)
     except KeyboardInterrupt:
-            print('\nExiting...')
-            mogami.print_time_elapsed()
-            sys.exit(0)
+        print('\nExiting...')
+        mogami.print_time_elapsed()
+        sys.exit(0)
