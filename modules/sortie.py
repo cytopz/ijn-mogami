@@ -5,16 +5,18 @@ class Sortie:
         self.sortie_map = sortie_map
         self.clear_mode = clear_mode
         self.hard_mode = hard_mode
-        self.mob_kill_required = MapDetail[self.sortie_map] if not kill_req else kill_req
+        self.mob_kill_required = (MapDetail[self.sortie_map]
+                                  if not kill_req else kill_req)
         self.kill_count = 0
-        self.switch_boss = True
+        self.switch_boss = False
         self.mob_fleet = 1
         self.mob_coords = {}
         self.boss_coord = None
         self.fleet_coord = None
         self.finish = False
         self.is_retire_filtered = False
-        self.is_event = False if not sortie_map else any(chr.isalpha() for chr in self.sortie_map)
+        self.is_event = (False if not sortie_map
+                         else any(chr.isalpha() for chr in self.sortie_map))
 
     def start(self):
         if self.sortie_map:
