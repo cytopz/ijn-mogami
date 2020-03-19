@@ -8,7 +8,7 @@ class Sortie:
         self.mob_kill_required = (MapDetail[self.sortie_map]
                                   if not kill_req else kill_req)
         self.kill_count = 0
-        self.switch_boss = False
+        self.switch_boss = True
         self.mob_fleet = 1
         self.mob_coords = {}
         self.boss_coord = None
