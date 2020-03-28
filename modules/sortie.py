@@ -406,16 +406,15 @@ class Sortie:
 
     def retire_ship(self):
         print('Retiring ship...')
-        # Not needed in new update
-        # Tools.tap(Buttons['sort'], 1.7)
-        # if not self.is_retire_filtered:
-        #     self.filter_retire_ship()
+        Tools.tap(Buttons['sort'], 1.7)
+        if not self.is_retire_filtered:
+            self.filter_retire_ship()
         # Selecting one row botes
-        # ship = Dimension(130, 145)
-        # for _ in range(7):
-        #     Tools.tap(ship, 0.35)
-        #     ship.x += 130
-        # Tools.wait(0.1)
+        ship = Dimension(130, 145)
+        for _ in range(7):
+            Tools.tap(ship, 0.35)
+            ship.x += 130
+        Tools.wait(0.1)
         Tools.tap(Dimension(692, 683))       # QuickRetire(tm)
         Tools.tap(Dimension(808, 598))       # confirm2
         Tools.tap(Dimension(630, 484))       # confirm >=elite
