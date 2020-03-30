@@ -134,7 +134,7 @@ class Sortie:
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
-        self.boss_coord = Tools.find('boss', sim) or Tools.find('dboss', sim)
+        self.boss_coord = Tools.find('boss', sim) or Tools.find('dboss', 0.75)
         is_overlap_mob_fleet = True
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
