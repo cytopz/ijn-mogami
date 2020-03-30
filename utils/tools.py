@@ -253,14 +253,12 @@ MapDetail = {
     '13-4': 7,
     # EVENT ONLY
     # CURRENT EVENT : RYUUJOU
-    'sp1': 4,
-    'sp2': 4,
-    'sp3': 5,
+    'c3': 5,
+    'd3': 6,
 }
 
 # EVENT ONLY
 Map = {
-    'sp1': Dimension(325, 325),
-    'sp2': Dimension(396, 533),
-    'sp3': Dimension(740, 420),
+    'c3': Dimension(786, 312),
+    'd3': Dimension(786, 312),
 }

@@ -31,10 +31,10 @@ class Sortie:
         if not self.is_event:
             Tools.tap(Buttons['battle_home'])
             Tools.wait(3)
-        if Tools.find('hard_mode') and self.hard_mode:
-            Tools.tap(Buttons['hard_mode'])
-        elif not Tools.find('hard_mode') and not self.hard_mode:
-            Tools.tap(Buttons['hard_mode'])
+            if Tools.find('hard_mode') and self.hard_mode:
+                Tools.tap(Buttons['hard_mode'])
+            elif not Tools.find('hard_mode') and not self.hard_mode:
+                Tools.tap(Buttons['hard_mode'])
         if Tools.find('urgent', 0.725):
             Tools.tap(Buttons['confirm'])
         map_loc = Tools.find(self.sortie_map) if not self.is_event else Map[self.sortie_map]
@@ -134,7 +134,7 @@ class Sortie:
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
-        self.boss_coord = Tools.find('boss', sim)
+        self.boss_coord = Tools.find('boss', sim) or Tools.find('dboss', sim)
         is_overlap_mob_fleet = True
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
@@ -275,6 +275,7 @@ class Sortie:
     def find_mobs(self):
         self.mob_coords.clear()
         mob_coords = {
+            'siren': [],
             'large': [],
             'medium': [],
             'small': [],
@@ -289,7 +290,17 @@ class Sortie:
                     sim_min = 0.85
                 if key == 'medium':
                     sim_min = 0.75
-                coords = Tools.find_multi('mob_'+key, sim, True)
+                if key == 'siren':
+                    if len(mob_coords[key]) != 0:
+                        break
+                    if self.kill_count >= 3:
+                        break
+                    sim_min = 0.7
+                    prefix = 'd' if self.sortie_map == 'd3' else ''
+                    for i in range(1, 4):
+                        coords += Tools.find_multi(f'{prefix}siren{str(i)}', sim, True, True) 
+                else:
+                    coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
                     break
                 if coords:
