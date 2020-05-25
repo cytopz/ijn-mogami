@@ -14,7 +14,7 @@ class Dimension:
         self.siren = siren
         if mob:
             if siren:
-                self.inc_y(40)
+                self.inc_y(50)
                 self.inc_x(-5)
             self.inc_val(25)
             self.check_borders()
@@ -252,13 +252,10 @@ MapDetail = {
     '13-3': 6,
     '13-4': 7,
     # EVENT ONLY
-    # CURRENT EVENT : RYUUJOU
-    'c3': 5,
-    'd3': 6,
+    'd2': 6,
 }
 
 # EVENT ONLY
 Map = {
-    'c3': Dimension(786, 312),
-    'd3': Dimension(786, 312),
+    'd2': Dimension(420, 512),
 }

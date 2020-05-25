@@ -3,7 +3,7 @@ from modules.sortie import Sortie
 
 class Dialy:
     def __init__(self):
-        self.hard_mode_map = '9-3'
+        self.hard_mode_map = '9-2'
         self.clear_mode = True
         self.dialy_level = '70'
         self.escort_dialy_mode = 'fire'

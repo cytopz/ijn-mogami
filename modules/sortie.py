@@ -8,7 +8,7 @@ class Sortie:
         self.mob_kill_required = (MapDetail[self.sortie_map]
                                   if not kill_req else kill_req)
         self.kill_count = 0
-        self.switch_boss = True
+        self.switch_boss = False if self.hard_mode else True
         self.mob_fleet = 1
         self.mob_coords = {}
         self.boss_coord = None
@@ -17,6 +17,7 @@ class Sortie:
         self.is_retire_filtered = False
         self.is_event = (False if not sortie_map
                          else any(chr.isalpha() for chr in self.sortie_map))
+        self.siren_found = 0
 
     def start(self):
         if self.sortie_map:
@@ -26,6 +27,7 @@ class Sortie:
         self.kill_count = 0
         self.is_retire_filtered = False
         self.finish = False
+        self.siren_found = 0
 
     def go_to_map(self):
         if not self.is_event:
@@ -82,7 +84,7 @@ class Sortie:
         if self.mob_fleet > 1:
             self.switch_fleet()
         # to center the view, adjust the values manually
-        # Tools.swipe(Dimension(512, 384), Dimension(852, 512))
+        Tools.swipe(Dimension(512, 384), Dimension(-72, 384))
         # Tools.swipe(Dimension(512, 384), Dimension(512, 562))
         while self.kill_count < self.mob_kill_required:
             # Tools.tap(Buttons['strategy_panel'])
@@ -134,7 +136,7 @@ class Sortie:
         if self.switch_boss:
             self.switch_fleet()
         self.fleet_coord = self.get_fleet_coord()
-        self.boss_coord = Tools.find('boss', sim) or Tools.find('dboss', 0.75)
+        self.boss_coord = Tools.find('boss', sim)
         is_overlap_mob_fleet = True
         while not self.boss_coord:
             self.boss_coord = self.look_around('boss', 1)
@@ -170,6 +172,7 @@ class Sortie:
         self.start_battle(True)
 
     def watch_for_distraction(self, mob_coord, from_boss=False):
+        Tools.tap(mob_coord)
         tap_count = 0
         while True:
             if Tools.find('cant_reach'):
@@ -291,14 +294,14 @@ class Sortie:
                 if key == 'medium':
                     sim_min = 0.75
                 if key == 'siren':
-                    if len(mob_coords[key]) != 0:
+                    if len(mob_coords[key]) != 0 or self.siren_found >= 3:
                         break
-                    if self.kill_count >= 3:
-                        break
-                    sim_min = 0.7
-                    prefix = 'd' if self.sortie_map == 'd3' else ''
+                    sim_min = 0.625
                     for i in range(1, 4):
-                        coords += Tools.find_multi(f'{prefix}siren{str(i)}', sim, True, True) 
+                        coords += Tools.find_multi(f'asiren{i}', sim, True, True)
+                        if coords:
+                            self.siren_found += 1
+                            break
                 else:
                     coords = Tools.find_multi('mob_'+key, sim, True)
                 if sim <= sim_min:
@@ -418,15 +421,15 @@ class Sortie:
     def retire_ship(self):
         print('Retiring ship...')
         Tools.tap(Buttons['sort'], 1.7)
-        if not self.is_retire_filtered:
-            self.filter_retire_ship()
-        # Selecting one row botes
-        ship = Dimension(130, 145)
-        for _ in range(7):
-            Tools.tap(ship, 0.35)
-            ship.x += 130
-        Tools.wait(0.1)
-        Tools.tap(Dimension(692, 683))       # QuickRetire(tm)
+        # if not self.is_retire_filtered:
+        #     self.filter_retire_ship()
+        # # Selecting one row botes
+        # ship = Dimension(130, 145)
+        # for _ in range(7):
+        #     Tools.tap(ship, 0.35)
+        #     ship.x += 130
+        # Tools.wait(0.1)
+        Tools.tap(Dimension(614, 669))       # QuickRetire(tm)
         Tools.tap(Dimension(808, 598))       # confirm2
         Tools.tap(Dimension(630, 484))       # confirm >=elite
         # Tap to continue
